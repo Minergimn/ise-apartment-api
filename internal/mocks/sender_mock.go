@@ -35,7 +35,7 @@ func (m *MockEventSender) EXPECT() *MockEventSenderMockRecorder {
 }
 
 // Send mocks base method.
-func (m *MockEventSender) Send(arg0 *apartment.ApartmentCreated) error {
+func (m *MockEventSender) Send(arg0 *apartment.ApartmentEvent) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Send", arg0)
 	ret0, _ := ret[0].(error)
