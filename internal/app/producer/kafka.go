@@ -20,7 +20,7 @@ type producer struct {
 	timeout time.Duration
 
 	sender sender.EventSender
-	events <-chan apartment.ApartmentCreated
+	events <-chan apartment.ApartmentEvent
 
 	workerPool *workerpool.WorkerPool
 
@@ -28,11 +28,10 @@ type producer struct {
 	done chan bool
 }
 
-// todo for students: add repo
 func NewKafkaProducer(
 	n uint64,
 	sender sender.EventSender,
-	events <-chan apartment.ApartmentCreated,
+	events <-chan apartment.ApartmentEvent,
 	workerPool *workerpool.WorkerPool,
 ) Producer {
 

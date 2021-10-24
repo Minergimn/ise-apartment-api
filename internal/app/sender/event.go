@@ -5,5 +5,5 @@ import (
 )
 
 type EventSender interface {
-	Send(subdomain *apartment.ApartmentCreated) error
+	Send(subdomain *apartment.ApartmentEvent) error
 }

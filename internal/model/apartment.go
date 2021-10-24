@@ -19,7 +19,7 @@ const (
 	Processed
 )
 
-type ApartmentCreated struct {
+type ApartmentEvent struct {
 	ID     uint64
 	Type   EventType
 	Status EventStatus

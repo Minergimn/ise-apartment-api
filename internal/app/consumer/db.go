@@ -15,7 +15,7 @@ type Consumer interface {
 
 type consumer struct {
 	n      uint64
-	events chan<- apartment.ApartmentCreated
+	events chan<- apartment.ApartmentEvent
 
 	repo repo.EventRepo
 
@@ -28,7 +28,7 @@ type consumer struct {
 
 type Config struct {
 	n         uint64
-	events    chan<- apartment.ApartmentCreated
+	events    chan<- apartment.ApartmentEvent
 	repo      repo.EventRepo
 	batchSize uint64
 	timeout   time.Duration
@@ -39,7 +39,7 @@ func NewDbConsumer(
 	batchSize uint64,
 	consumeTimeout time.Duration,
 	repo repo.EventRepo,
-	events chan<- apartment.ApartmentCreated) Consumer {
+	events chan<- apartment.ApartmentEvent) Consumer {
 
 	wg := &sync.WaitGroup{}
 	done := make(chan bool)
