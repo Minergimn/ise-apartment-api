@@ -52,6 +52,7 @@ func NewRetranslator(cfg Config) Retranslator {
 		cfg.ProducerCount,
 		cfg.Sender,
 		events,
+		cfg.Repo,
 		workerPool)
 
 	return &retranslator{
