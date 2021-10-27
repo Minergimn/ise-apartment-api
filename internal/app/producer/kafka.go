@@ -1,9 +1,11 @@
 package producer
 
 import (
+	"log"
 	"sync"
 	"time"
 
+	"github.com/ozonmp/omp-demo-api/internal/app/repo"
 	"github.com/ozonmp/omp-demo-api/internal/app/sender"
 	"github.com/ozonmp/omp-demo-api/internal/model"
 
@@ -22,6 +24,8 @@ type producer struct {
 	sender sender.EventSender
 	events <-chan apartment.ApartmentEvent
 
+	repo repo.EventRepo
+
 	workerPool *workerpool.WorkerPool
 
 	wg   *sync.WaitGroup
@@ -32,6 +36,7 @@ func NewKafkaProducer(
 	n uint64,
 	sender sender.EventSender,
 	events <-chan apartment.ApartmentEvent,
+	repo repo.EventRepo,
 	workerPool *workerpool.WorkerPool,
 ) Producer {
 
@@ -42,6 +47,7 @@ func NewKafkaProducer(
 		n:          n,
 		sender:     sender,
 		events:     events,
+		repo: 		repo,
 		workerPool: workerPool,
 		wg:         wg,
 		done:       done,
@@ -58,11 +64,19 @@ func (p *producer) Start() {
 				case event := <-p.events:
 					if err := p.sender.Send(&event); err != nil {
 						p.workerPool.Submit(func() {
-							// ...
+							log.Printf("Sending of event %s failed with error: %t", event.String(), err)
+
+							if err = p.repo.Unlock([]uint64{event.ID}); err != nil{
+								log.Printf("Unlock event %s has error: %t",event.String(), err)
+							}
 						})
 					} else {
 						p.workerPool.Submit(func() {
-							// ...
+							log.Printf("Sending of event %d was succeeded", event.ID)
+
+							if err = p.repo.Remove([]uint64{event.ID}); err != nil{
+								log.Printf("Removing event %s has error: %t",event.String(), err)
+							}
 						})
 					}
 				case <-p.done:
