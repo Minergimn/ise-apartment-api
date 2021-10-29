@@ -3,6 +3,7 @@ package retranslator
 import (
 	"fmt"
 	apartment "github.com/ozonmp/omp-demo-api/internal/model"
+	"sync"
 	"testing"
 	"time"
 
@@ -37,13 +38,22 @@ func TestStart(t *testing.T) {
 }
 
 func TestSendAndRemove(t *testing.T) {
+	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	repo := mocks.NewMockEventRepo(ctrl)
 	sender := mocks.NewMockEventSender(ctrl)
+	
+	eventCount := 10
 
 	events := make([]apartment.ApartmentEvent, 0)
-	for i := uint64(0); i < 10; i++ {
+	lockedEvents := make(map[uint64]bool)
+	sendedEvents := make(map[uint64]apartment.ApartmentEvent)
+	var eventsLock sync.Mutex
+	var sendedEventsLock sync.Mutex
+
+
+	for i := uint64(0); i < uint64(eventCount); i++ {
 		events = append(events, apartment.ApartmentEvent{
 			ID: i,
 			Type: apartment.Created,
@@ -55,12 +65,33 @@ func TestSendAndRemove(t *testing.T) {
 			},
 		})
 	}
-	sendedEvents := make([]apartment.ApartmentEvent, 0)
 
-	repo.EXPECT().Lock(gomock.Any()).DoAndReturn(func(count uint64) ([]apartment.ApartmentEvent, error){
-		return events, nil
-	}).Times(1)
+	repo.EXPECT().Lock(gomock.Any()).DoAndReturn(func(count uint64) (result []apartment.ApartmentEvent, err error){
+		eventsLock.Lock()
+		defer eventsLock.Unlock()
+
+		counter := uint64(0)
+		for _, event := range events{
+			if _, ok := lockedEvents[event.ID]; ok {
+				continue
+			} else {
+				result = append(result, event)
+
+				lockedEvents[event.ID] = true
+
+				counter++
+				if counter == count{
+					return
+				}
+			}
+		}
+		
+		return nil, nil
+	}).AnyTimes()
 	repo.EXPECT().Remove(gomock.Any()).DoAndReturn(func(ids []uint64) (err error){
+		eventsLock.Lock()
+		defer eventsLock.Unlock()
+
 		for _, id := range ids{
 			events[id].Status = apartment.Processed
 		}
@@ -68,14 +99,22 @@ func TestSendAndRemove(t *testing.T) {
 	}).AnyTimes()
 
 	sender.EXPECT().Send(gomock.Any()).DoAndReturn(func(e *apartment.ApartmentEvent) (err error){
-		sendedEvents = append(sendedEvents, *e)
+		sendedEventsLock.Lock()
+		defer sendedEventsLock.Unlock()
+
+		if _, ok := sendedEvents[e.ID]; ok {
+			return nil
+		} else {
+			sendedEvents[e.ID] = *e
+		}
+
 		return nil
 	}).AnyTimes()
 
 	cfg := Config{
 		ChannelSize:   512,
-		ConsumerCount: 1,
-		ConsumeSize:   10,
+		ConsumerCount: 5,
+		ConsumeSize:   2,
 		ConsumeTimeout: 10 * time.Second,
 		ProducerCount: 10,
 		WorkerCount:   10,
@@ -85,11 +124,11 @@ func TestSendAndRemove(t *testing.T) {
 
 	retranslator := NewRetranslator(cfg)
 	retranslator.Start()
-	time.Sleep(time.Second * 15)
+	time.Sleep(time.Second * 10)
 	retranslator.Close()
 
-	if len(sendedEvents) < len(events){
-		t.Errorf("Not all events were sended to kafka %d/%d", len(sendedEvents), len(events))
+	if len(sendedEvents) != eventCount{
+		t.Errorf("Not all events were sended to kafka %d/%d", len(sendedEvents), eventCount)
 		t.FailNow()
 	}
 
