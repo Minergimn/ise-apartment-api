@@ -17,19 +17,9 @@ func TestStart(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	repo := mocks.NewMockEventRepo(ctrl)
 	sender := mocks.NewMockEventSender(ctrl)
+	cfg := getConfig(repo, sender)
 
 	repo.EXPECT().Lock(gomock.Any()).AnyTimes()
-
-	cfg := Config{
-		ChannelSize:   512,
-		ConsumerCount: 2,
-		ConsumeSize:   10,
-		ConsumeTimeout: 10 * time.Second,
-		ProducerCount: 2,
-		WorkerCount:   2,
-		Repo:          repo,
-		Sender:        sender,
-	}
 
 	retranslator := NewRetranslator(cfg)
 	retranslator.Start()
@@ -43,6 +33,7 @@ func TestSendAndRemove(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	repo := mocks.NewMockEventRepo(ctrl)
 	sender := mocks.NewMockEventSender(ctrl)
+	cfg := getConfig(repo, sender)
 	
 	eventCount := 10
 
@@ -51,7 +42,6 @@ func TestSendAndRemove(t *testing.T) {
 	sendedEvents := make(map[uint64]apartment.ApartmentEvent)
 	var eventsLock sync.Mutex
 	var sendedEventsLock sync.Mutex
-
 
 	for i := uint64(0); i < uint64(eventCount); i++ {
 		events = append(events, apartment.ApartmentEvent{
@@ -88,6 +78,7 @@ func TestSendAndRemove(t *testing.T) {
 		
 		return nil, nil
 	}).AnyTimes()
+
 	repo.EXPECT().Remove(gomock.Any()).DoAndReturn(func(ids []uint64) (err error){
 		eventsLock.Lock()
 		defer eventsLock.Unlock()
@@ -111,17 +102,6 @@ func TestSendAndRemove(t *testing.T) {
 		return nil
 	}).AnyTimes()
 
-	cfg := Config{
-		ChannelSize:   512,
-		ConsumerCount: 5,
-		ConsumeSize:   2,
-		ConsumeTimeout: 10 * time.Second,
-		ProducerCount: 10,
-		WorkerCount:   10,
-		Repo:          repo,
-		Sender:        sender,
-	}
-
 	retranslator := NewRetranslator(cfg)
 	retranslator.Start()
 	time.Sleep(time.Second * 10)
@@ -138,4 +118,18 @@ func TestSendAndRemove(t *testing.T) {
 			t.FailNow()
 		}
 	}
+}
+
+func getConfig(repo *mocks.MockEventRepo, sender *mocks.MockEventSender) Config {
+	cfg := Config{
+		ChannelSize:    512,
+		ConsumerCount:  5,
+		ConsumeSize:    2,
+		ConsumeTimeout: 10 * time.Second,
+		ProducerCount:  10,
+		WorkerCount:    10,
+		Repo:           repo,
+		Sender:         sender,
+	}
+	return cfg
 }
