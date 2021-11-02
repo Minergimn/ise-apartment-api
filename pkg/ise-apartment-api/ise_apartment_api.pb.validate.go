@@ -40,19 +40,24 @@ func (m *Apartment) Validate() error {
 		return nil
 	}
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		return ApartmentValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+	}
 
-	// no validation rules for Object
+	if l := utf8.RuneCountInString(m.GetObject()); l < 1 || l > 1000 {
+		return ApartmentValidationError{
+			field:  "Object",
+			reason: "value length must be between 1 and 1000 runes, inclusive",
+		}
+	}
 
-	// no validation rules for Owner
-
-	if v, ok := interface{}(m.GetCreated()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return ApartmentValidationError{
-				field:  "Created",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
+	if l := utf8.RuneCountInString(m.GetOwner()); l < 1 || l > 1000 {
+		return ApartmentValidationError{
+			field:  "Owner",
+			reason: "value length must be between 1 and 1000 runes, inclusive",
 		}
 	}
 
@@ -264,3 +269,465 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DescribeApartmentV1ResponseValidationError{}
+
+// Validate checks the field values on CreateApartmentV1Request with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *CreateApartmentV1Request) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.GetValue() == nil {
+		return CreateApartmentV1RequestValidationError{
+			field:  "Value",
+			reason: "value is required",
+		}
+	}
+
+	if v, ok := interface{}(m.GetValue()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateApartmentV1RequestValidationError{
+				field:  "Value",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	return nil
+}
+
+// CreateApartmentV1RequestValidationError is the validation error returned by
+// CreateApartmentV1Request.Validate if the designated constraints aren't met.
+type CreateApartmentV1RequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CreateApartmentV1RequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CreateApartmentV1RequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CreateApartmentV1RequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CreateApartmentV1RequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CreateApartmentV1RequestValidationError) ErrorName() string {
+	return "CreateApartmentV1RequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CreateApartmentV1RequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCreateApartmentV1Request.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CreateApartmentV1RequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CreateApartmentV1RequestValidationError{}
+
+// Validate checks the field values on CreateApartmentV1Response with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *CreateApartmentV1Response) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	// no validation rules for ApartmentId
+
+	return nil
+}
+
+// CreateApartmentV1ResponseValidationError is the validation error returned by
+// CreateApartmentV1Response.Validate if the designated constraints aren't met.
+type CreateApartmentV1ResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CreateApartmentV1ResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CreateApartmentV1ResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CreateApartmentV1ResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CreateApartmentV1ResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CreateApartmentV1ResponseValidationError) ErrorName() string {
+	return "CreateApartmentV1ResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CreateApartmentV1ResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCreateApartmentV1Response.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CreateApartmentV1ResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CreateApartmentV1ResponseValidationError{}
+
+// Validate checks the field values on ListApartmentV1Request with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *ListApartmentV1Request) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	if v, ok := interface{}(m.GetParams()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return ListApartmentV1RequestValidationError{
+				field:  "Params",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	return nil
+}
+
+// ListApartmentV1RequestValidationError is the validation error returned by
+// ListApartmentV1Request.Validate if the designated constraints aren't met.
+type ListApartmentV1RequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListApartmentV1RequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListApartmentV1RequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListApartmentV1RequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListApartmentV1RequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListApartmentV1RequestValidationError) ErrorName() string {
+	return "ListApartmentV1RequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListApartmentV1RequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListApartmentV1Request.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListApartmentV1RequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListApartmentV1RequestValidationError{}
+
+// Validate checks the field values on ListApartmentV1Response with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *ListApartmentV1Response) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	for idx, item := range m.GetApartments() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListApartmentV1ResponseValidationError{
+					field:  fmt.Sprintf("Apartments[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ListApartmentV1ResponseValidationError is the validation error returned by
+// ListApartmentV1Response.Validate if the designated constraints aren't met.
+type ListApartmentV1ResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListApartmentV1ResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListApartmentV1ResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListApartmentV1ResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListApartmentV1ResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListApartmentV1ResponseValidationError) ErrorName() string {
+	return "ListApartmentV1ResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListApartmentV1ResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListApartmentV1Response.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListApartmentV1ResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListApartmentV1ResponseValidationError{}
+
+// Validate checks the field values on RemoveApartmentV1Request with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *RemoveApartmentV1Request) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.GetApartmentId() <= 0 {
+		return RemoveApartmentV1RequestValidationError{
+			field:  "ApartmentId",
+			reason: "value must be greater than 0",
+		}
+	}
+
+	return nil
+}
+
+// RemoveApartmentV1RequestValidationError is the validation error returned by
+// RemoveApartmentV1Request.Validate if the designated constraints aren't met.
+type RemoveApartmentV1RequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RemoveApartmentV1RequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RemoveApartmentV1RequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RemoveApartmentV1RequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RemoveApartmentV1RequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RemoveApartmentV1RequestValidationError) ErrorName() string {
+	return "RemoveApartmentV1RequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RemoveApartmentV1RequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRemoveApartmentV1Request.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RemoveApartmentV1RequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RemoveApartmentV1RequestValidationError{}
+
+// Validate checks the field values on
+// ListApartmentV1Request_ListApartmentParams with the rules defined in the
+// proto definition for this message. If any rules are violated, an error is returned.
+func (m *ListApartmentV1Request_ListApartmentParams) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	// no validation rules for Offset
+
+	// no validation rules for Limit
+
+	// no validation rules for Object
+
+	// no validation rules for Owner
+
+	return nil
+}
+
+// ListApartmentV1Request_ListApartmentParamsValidationError is the validation
+// error returned by ListApartmentV1Request_ListApartmentParams.Validate if
+// the designated constraints aren't met.
+type ListApartmentV1Request_ListApartmentParamsValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListApartmentV1Request_ListApartmentParamsValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListApartmentV1Request_ListApartmentParamsValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListApartmentV1Request_ListApartmentParamsValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListApartmentV1Request_ListApartmentParamsValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListApartmentV1Request_ListApartmentParamsValidationError) ErrorName() string {
+	return "ListApartmentV1Request_ListApartmentParamsValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListApartmentV1Request_ListApartmentParamsValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListApartmentV1Request_ListApartmentParams.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListApartmentV1Request_ListApartmentParamsValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListApartmentV1Request_ListApartmentParamsValidationError{}
