@@ -3,13 +3,13 @@ package retranslator
 import (
 	"errors"
 	"fmt"
-	apartment "github.com/ozonmp/omp-demo-api/internal/model"
+	apartment "github.com/ozonmp/ise-apartment-api/internal/model"
 	"sync"
 	"testing"
 	"time"
 
 	"github.com/golang/mock/gomock"
-	"github.com/ozonmp/omp-demo-api/internal/mocks"
+	"github.com/ozonmp/ise-apartment-api/internal/mocks"
 )
 
 func TestStart(t *testing.T) {

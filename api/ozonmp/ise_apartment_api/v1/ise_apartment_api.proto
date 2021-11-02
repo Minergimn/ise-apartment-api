@@ -1,33 +1,34 @@
 syntax = "proto3";
 
-package ozonmp.omp_template_api.v1;
+package ozonmp.ise_apartment_api.v1;
 
 import "validate/validate.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/ozonmp/omp-template-api/pkg/omp-template-api;omp_template_api";
+option go_package = "github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api;ise_apartment_api";
 
-// OmpTemplateApiService - Service for working with templates
-service OmpTemplateApiService {
-  // DescribeTemplateV1 - Describe a template
-  rpc DescribeTemplateV1(DescribeTemplateV1Request) returns (DescribeTemplateV1Response) {
+// IseApartmentApiService - Service for working with apartments
+service IseApartmentApiService {
+  // DescribeApartmentV1 - Describe an apartment
+  rpc DescribeApartmentV1(DescribeApartmentV1Request) returns (DescribeApartmentV1Response) {
     option (google.api.http) = {
-      get: "/v1/templates/{template_id}"
+      get: "/v1/apartments/{apartment_id}"
     };
   }
 }
 
-message Template {
+message Apartment {
   uint64 id  = 1;
-  uint64 foo = 2;
-  google.protobuf.Timestamp created = 3;
+  string object = 2;
+  string owner = 3;
+  google.protobuf.Timestamp created = 4;
 }
 
-message DescribeTemplateV1Request {
-  uint64 template_id = 1 [(validate.rules).uint64.gt = 0];
+message DescribeApartmentV1Request {
+  uint64 apartment_id = 1 [(validate.rules).uint64.gt = 0];
 }
 
-message DescribeTemplateV1Response {
-  Template value = 1;
+message DescribeApartmentV1Response {
+  Apartment value = 1;
 }
