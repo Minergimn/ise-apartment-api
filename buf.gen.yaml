@@ -1,26 +1,26 @@
 version: v1
 plugins:
   - name: go
-    out: pkg/ise-apartment-api
+    out: pkg/omp-template-api
     opt:
       - paths=import
     strategy: directory
 
   - name: go-grpc
-    out: pkg/ise-apartment-api
+    out: pkg/omp-template-api
     opt:
       - paths=import
     strategy: directory
 
   - name: grpc-gateway
-    out: pkg/ise-apartment-api
+    out: pkg/omp-template-api
     opt:
       - logtostderr=true
       - paths=import
     strategy: directory
 
   - name: validate
-    out: pkg/ise-apartment-api
+    out: pkg/omp-template-api
     opt:
       - lang=go
     strategy: directory

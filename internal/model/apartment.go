@@ -3,9 +3,9 @@ package apartment
 import "fmt"
 
 type Apartment struct {
-	ID     uint64 `db:"id"`
-	Object string `db:"object"`
-	Owner  string `db:"owner"`
+	ID     uint64
+	Object string
+	Owner  string
 }
 
 type EventType uint8

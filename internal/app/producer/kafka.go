@@ -5,9 +5,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ozonmp/ise-apartment-api/internal/app/repo"
-	"github.com/ozonmp/ise-apartment-api/internal/app/sender"
-	"github.com/ozonmp/ise-apartment-api/internal/model"
+	"github.com/ozonmp/omp-demo-api/internal/app/repo"
+	"github.com/ozonmp/omp-demo-api/internal/app/sender"
+	"github.com/ozonmp/omp-demo-api/internal/model"
 
 	"github.com/gammazero/workerpool"
 )

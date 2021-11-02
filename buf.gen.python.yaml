@@ -1,22 +1,22 @@
 version: v1
 plugins:
   - name: python
-    out: pypkg/ise-apartment-api
+    out: pypkg/omp-template-api
     strategy: directory
 
   - name: grpclib_python
-    out: pypkg/ise-apartment-api
+    out: pypkg/omp-template-api
     strategy: directory
 
   - name: grpc-gateway
-    out: pkg/ise-apartment-api
+    out: pkg/omp-template-api
     opt:
       - logtostderr=true
       - paths=import
     strategy: directory
 
   - name: validate
-    out: pkg/ise-apartment-api
+    out: pkg/omp-template-api
     opt:
       - lang=go
     strategy: directory

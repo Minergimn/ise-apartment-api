@@ -5,8 +5,8 @@ endif
 
 export GO111MODULE=on
 
-SERVICE_NAME=ise-apartment-api
-SERVICE_PATH=ozonmp/ise-apartment-api
+SERVICE_NAME=omp-template-api
+SERVICE_PATH=ozonmp/omp-template-api
 
 PGV_VERSION:="v0.6.1"
 BUF_VERSION:="v0.56.0"
@@ -53,7 +53,7 @@ generate-go: .generate-install-buf .generate-go .generate-finalize-go
 	$(BUF_EXE) generate
 
 .generate-python:
-	$(BUF_EXE) generate --apartment buf.gen.python.yaml
+	$(BUF_EXE) generate --template buf.gen.python.yaml
 
 .generate-finalize-go:
 	mv pkg/$(SERVICE_NAME)/github.com/$(SERVICE_PATH)/pkg/$(SERVICE_NAME)/* pkg/$(SERVICE_NAME)
@@ -61,7 +61,7 @@ generate-go: .generate-install-buf .generate-go .generate-finalize-go
 	cd pkg/$(SERVICE_NAME) && ls go.mod || (go mod init github.com/$(SERVICE_PATH)/pkg/$(SERVICE_NAME) && go mod tidy)
 
 .generate-finalize-python:
-	find pypkg/ise-apartment-api -type d -exec touch {}/__init__.py \;
+	find pypkg/omp-template-api -type d -exec touch {}/__init__.py \;
 
 # ----------------------------------------------------------------
 
@@ -78,7 +78,7 @@ deps-go:
 	go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger@latest
 
 .deps-python:
-	python -m pip install grpcio-tools grpclib protobuf
+	python3 -m pip install grpcio-tools grpclib protobuf
 
 .PHONY: build
 build: generate .build

@@ -5,4 +5,4 @@ scrape_configs:
   - job_name: 'prometheus'
     static_configs:
       - targets:
-        - ise-apartment-api:9100
+        - omp-template-api:9100

@@ -1,8 +1,8 @@
 -- +goose Up
-CREATE TABLE apartment (
+CREATE TABLE template (
   id BIGSERIAL PRIMARY KEY,
   foo BIGINT NOT NULL
 );
 
 -- +goose Down
-DROP TABLE apartment;
+DROP TABLE template;
