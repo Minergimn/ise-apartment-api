@@ -1,4 +1,4 @@
-module github.com/ozonmp/omp-template-api
+module github.com/ozonmp/ise-apartment-api
 
 go 1.16
 
@@ -11,7 +11,7 @@ require (
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/lib/pq v1.10.3
 	github.com/opentracing/opentracing-go v1.2.0
-	github.com/ozonmp/omp-template-api/pkg/omp-template-api v0.0.0-00010101000000-000000000000
+	//github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api v0.0.0-00010101000000-000000000000
 	github.com/pressly/goose/v3 v3.1.0
 	github.com/prometheus/client_golang v1.11.0
 	github.com/rs/zerolog v1.24.0
@@ -23,4 +23,4 @@ require (
 	github.com/golang/mock v1.6.0 // indirect
 )
 
-replace github.com/ozonmp/omp-template-api/pkg/omp-template-api => ./pkg/omp-template-api
+replace github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api => ./pkg/ise-apartment-api
