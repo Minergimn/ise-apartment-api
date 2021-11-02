@@ -20,3 +20,8 @@ main
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+/.idea/.gitignore
+/.idea/ise-apartment-api.iml
+/.idea/modules.xml
+/.idea/vcs.xml
