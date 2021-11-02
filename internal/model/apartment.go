@@ -1,7 +1,9 @@
-package model
+package apartment
 
-type Subdomain struct {
-	ID uint64
+type Apartment struct {
+	ID     uint64
+	Object string
+	Owner  string
 }
 
 type EventType uint8
@@ -17,9 +19,9 @@ const (
 	Processed
 )
 
-type SubdomainEvent struct {
+type ApartmentCreated struct {
 	ID     uint64
 	Type   EventType
 	Status EventStatus
-	Entity *Subdomain
+	Entity *Apartment
 }
