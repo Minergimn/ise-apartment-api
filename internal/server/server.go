@@ -50,28 +50,15 @@ func (s *GrpcServer) Start(cfg *config.Config) error {
 	defer cancel()
 
 	gatewayAddr := fmt.Sprintf("%s:%v", cfg.Rest.Host, cfg.Rest.Port)
-	swaggerAddr := fmt.Sprintf("%s:%v", cfg.Swagger.Host, cfg.Swagger.Port)
 	grpcAddr := fmt.Sprintf("%s:%v", cfg.Grpc.Host, cfg.Grpc.Port)
 	metricsAddr := fmt.Sprintf("%s:%v", cfg.Metrics.Host, cfg.Metrics.Port)
 
-	gatewayServer := createGatewayServer(grpcAddr, gatewayAddr, cfg.Rest.AllowedCORSOrigins, cfg.Swagger.Filepath)
-	swaggerServer, err := createSwaggerServer(gatewayAddr, swaggerAddr, cfg.Swagger.Filepath)
-	if err != nil {
-		return err
-	}
+	gatewayServer := createGatewayServer(grpcAddr, gatewayAddr, cfg.Rest.AllowedCORSOrigins)
 
 	go func() {
 		log.Info().Msgf("Gateway server is running on %s", gatewayAddr)
 		if err := gatewayServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Error().Err(err).Msg("Failed running gateway server")
-			cancel()
-		}
-	}()
-
-	go func() {
-		log.Info().Msgf("Swagger server is running on %s", swaggerAddr)
-		if err := swaggerServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Error().Err(err).Msg("Failed running swagger server")
 			cancel()
 		}
 	}()

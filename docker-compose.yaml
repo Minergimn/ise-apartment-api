@@ -21,7 +21,6 @@ services:
       - kafka
     ports:
       - 8080:8080 # REST
-      - 8081:8081 # swagger
       - 8082:8082 # gRPC
       - 9100:9100 # Metrics prometheus
       - 8000:8000 # Status prometheus
@@ -118,19 +117,19 @@ services:
     networks:
       - isenw
 
-#  swagger-ui:
-#    image: swaggerapi/swagger-ui
-#    ports:
-#      - 8081:8080
-#    restart: always
-#    volumes:
-#      - ./swagger:/swagger
-#    environment:
-#      SWAGGER_JSON: /swagger/ozonmp/ise_apartment_api/v1/ise_apartment_api.swagger.json
-#    depends_on:
-#      - ise-apartment-api
-#    networks:
-#      - isenw
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    ports:
+      - 8081:8080
+    restart: always
+    volumes:
+      - ./swagger:/swagger
+    environment:
+      SWAGGER_JSON: /swagger/ozonmp/ise_apartment_api/v1/ise_apartment_api.swagger.json
+    depends_on:
+      - ise-apartment-api
+    networks:
+      - isenw
 
   jaeger:
     image: jaegertracing/all-in-one

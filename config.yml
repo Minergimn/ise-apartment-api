@@ -18,11 +18,6 @@ rest:
     - "http://0.0.0.0:8081"
     - "http://127.0.0.1:8081"
 
-swagger:
-  host: 0.0.0.0
-  port: 8081
-  filepath: "swagger/ozonmp/ise_apartment_api/v1/ise_apartment_api.swagger.json"
-
 metrics:
   host: 0.0.0.0
   port: 9100
