@@ -58,7 +58,7 @@ func injectHost(swaggerBytes []byte, host string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unmarshal error: %w", err)
 	}
-	parsedSwagger["host"] = host
+	parsedSwagger["host"] = "localhost:8080"
 
 	resultBytes, err := json.Marshal(parsedSwagger)
 	if err != nil {
