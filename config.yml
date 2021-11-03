@@ -13,6 +13,15 @@ grpc:
 rest:
   host: 0.0.0.0
   port: 8080
+  allowedCorsOrigins:
+    - "http://localhost:8081"
+    - "http://0.0.0.0:8081"
+    - "http://127.0.0.1:8081"
+
+swagger:
+  host: 0.0.0.0
+  port: 8081
+  filepath: "swagger/ozonmp/ise_apartment_api/v1/ise_apartment_api.swagger.json"
 
 metrics:
   host: 0.0.0.0
@@ -36,7 +45,7 @@ database:
   port: 5432
   user: docker
   password: docker
-  name: omp_apartment_api
+  name: ise_apartment_api
   sslmode: disable
   migrations: migrations
   driver: pgx
