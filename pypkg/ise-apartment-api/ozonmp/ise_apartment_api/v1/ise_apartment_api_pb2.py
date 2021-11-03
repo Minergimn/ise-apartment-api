@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='ozonmp.ise_apartment_api.v1',
   syntax='proto3',
   serialized_options=_b('ZKgithub.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api;ise_apartment_api'),
-  serialized_pb=_b('\n3ozonmp/ise_apartment_api/v1/ise_apartment_api.proto\x12\x1bozonmp.ise_apartment_api.v1\x1a\x17validate/validate.proto\x1a\x1cgoogle/api/annotations.proto\"j\n\tApartment\x12\x17\n\x02id\x18\x01 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x02id\x12\"\n\x06object\x18\x02 \x01(\tB\n\xfa\x42\x07r\x05\x10\x01\x18\xe8\x07R\x06object\x12 \n\x05owner\x18\x03 \x01(\tB\n\xfa\x42\x07r\x05\x10\x01\x18\xe8\x07R\x05owner\"H\n\x1a\x44\x65scribeApartmentV1Request\x12*\n\x0c\x61partment_id\x18\x01 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x0b\x61partmentId\"[\n\x1b\x44\x65scribeApartmentV1Response\x12<\n\x05value\x18\x01 \x01(\x0b\x32&.ozonmp.ise_apartment_api.v1.ApartmentR\x05value\"b\n\x18\x43reateApartmentV1Request\x12\x46\n\x05value\x18\x01 \x01(\x0b\x32&.ozonmp.ise_apartment_api.v1.ApartmentB\x08\xfa\x42\x05\x8a\x01\x02\x10\x01R\x05value\">\n\x19\x43reateApartmentV1Response\x12!\n\x0c\x61partment_id\x18\x01 \x01(\x04R\x0b\x61partmentId\"\xad\x02\n\x17ListApartmentsV1Request\x12\x61\n\x06params\x18\x01 \x01(\x0b\x32I.ozonmp.ise_apartment_api.v1.ListApartmentsV1Request.ListApartmentsParamsR\x06params\x1a\xae\x01\n\x14ListApartmentsParams\x12\x10\n\x03ids\x18\x01 \x03(\x04R\x03ids\x12\x1f\n\x06offset\x18\x02 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x06offset\x12\x1d\n\x05limit\x18\x03 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x05limit\x12\"\n\x06object\x18\x04 \x01(\tB\n\xfa\x42\x07r\x05\x10\x01\x18\xe8\x07R\x06object\x12 \n\x05owner\x18\x05 \x01(\tB\n\xfa\x42\x07r\x05\x10\x01\x18\xe8\x07R\x05owner\"X\n\x18ListApartmentsV1Response\x12<\n\x05items\x18\x01 \x03(\x0b\x32&.ozonmp.ise_apartment_api.v1.ApartmentR\x05items\"F\n\x18RemoveApartmentV1Request\x12*\n\x0c\x61partment_id\x18\x01 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x0b\x61partmentId\"1\n\x19RemoveApartmentV1Response\x12\x14\n\x05\x66ound\x18\x01 \x01(\x08R\x05\x66ound2\xc8\x05\n\x16IseApartmentApiService\x12\xaf\x01\n\x13\x44\x65scribeApartmentV1\x12\x37.ozonmp.ise_apartment_api.v1.DescribeApartmentV1Request\x1a\x38.ozonmp.ise_apartment_api.v1.DescribeApartmentV1Response\"%\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1/apartments/{apartment_id}\x12\xa8\x01\n\x11\x43reateApartmentV1\x12\x35.ozonmp.ise_apartment_api.v1.CreateApartmentV1Request\x1a\x36.ozonmp.ise_apartment_api.v1.CreateApartmentV1Response\"$\x82\xd3\xe4\x93\x02\x1e\"\x15/v1/apartments/create:\x05value\x12\xa4\x01\n\x10ListApartmentsV1\x12\x34.ozonmp.ise_apartment_api.v1.ListApartmentsV1Request\x1a\x35.ozonmp.ise_apartment_api.v1.ListApartmentsV1Response\"#\x82\xd3\xe4\x93\x02\x1d\"\x13/v1/apartments/list:\x06params\x12\xa9\x01\n\x11RemoveApartmentV1\x12\x35.ozonmp.ise_apartment_api.v1.RemoveApartmentV1Request\x1a\x36.ozonmp.ise_apartment_api.v1.RemoveApartmentV1Response\"%\x82\xd3\xe4\x93\x02\x1f*\x1d/v1/apartments/{apartment_id}BMZKgithub.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api;ise_apartment_apib\x06proto3')
+  serialized_pb=_b('\n3ozonmp/ise_apartment_api/v1/ise_apartment_api.proto\x12\x1bozonmp.ise_apartment_api.v1\x1a\x17validate/validate.proto\x1a\x1cgoogle/api/annotations.proto\"a\n\tApartment\x12\x0e\n\x02id\x18\x01 \x01(\x04R\x02id\x12\"\n\x06object\x18\x02 \x01(\tB\n\xfa\x42\x07r\x05\x10\x01\x18\xe8\x07R\x06object\x12 \n\x05owner\x18\x03 \x01(\tB\n\xfa\x42\x07r\x05\x10\x01\x18\xe8\x07R\x05owner\"H\n\x1a\x44\x65scribeApartmentV1Request\x12*\n\x0c\x61partment_id\x18\x01 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x0b\x61partmentId\"[\n\x1b\x44\x65scribeApartmentV1Response\x12<\n\x05value\x18\x01 \x01(\x0b\x32&.ozonmp.ise_apartment_api.v1.ApartmentR\x05value\"b\n\x18\x43reateApartmentV1Request\x12\x46\n\x05value\x18\x01 \x01(\x0b\x32&.ozonmp.ise_apartment_api.v1.ApartmentB\x08\xfa\x42\x05\x8a\x01\x02\x10\x01R\x05value\">\n\x19\x43reateApartmentV1Response\x12!\n\x0c\x61partment_id\x18\x01 \x01(\x04R\x0b\x61partmentId\"\x83\x02\n\x17ListApartmentsV1Request\x12\x61\n\x06params\x18\x01 \x01(\x0b\x32I.ozonmp.ise_apartment_api.v1.ListApartmentsV1Request.ListApartmentsParamsR\x06params\x1a\x84\x01\n\x14ListApartmentsParams\x12\x10\n\x03ids\x18\x01 \x03(\x04R\x03ids\x12\x16\n\x06offset\x18\x02 \x01(\x04R\x06offset\x12\x14\n\x05limit\x18\x03 \x01(\x04R\x05limit\x12\x16\n\x06object\x18\x04 \x01(\tR\x06object\x12\x14\n\x05owner\x18\x05 \x01(\tR\x05owner\"X\n\x18ListApartmentsV1Response\x12<\n\x05items\x18\x01 \x03(\x0b\x32&.ozonmp.ise_apartment_api.v1.ApartmentR\x05items\"F\n\x18RemoveApartmentV1Request\x12*\n\x0c\x61partment_id\x18\x01 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x0b\x61partmentId\"1\n\x19RemoveApartmentV1Response\x12\x14\n\x05\x66ound\x18\x01 \x01(\x08R\x05\x66ound2\xc8\x05\n\x16IseApartmentApiService\x12\xaf\x01\n\x13\x44\x65scribeApartmentV1\x12\x37.ozonmp.ise_apartment_api.v1.DescribeApartmentV1Request\x1a\x38.ozonmp.ise_apartment_api.v1.DescribeApartmentV1Response\"%\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1/apartments/{apartment_id}\x12\xa8\x01\n\x11\x43reateApartmentV1\x12\x35.ozonmp.ise_apartment_api.v1.CreateApartmentV1Request\x1a\x36.ozonmp.ise_apartment_api.v1.CreateApartmentV1Response\"$\x82\xd3\xe4\x93\x02\x1e\"\x15/v1/apartments/create:\x05value\x12\xa4\x01\n\x10ListApartmentsV1\x12\x34.ozonmp.ise_apartment_api.v1.ListApartmentsV1Request\x1a\x35.ozonmp.ise_apartment_api.v1.ListApartmentsV1Response\"#\x82\xd3\xe4\x93\x02\x1d\"\x13/v1/apartments/list:\x06params\x12\xa9\x01\n\x11RemoveApartmentV1\x12\x35.ozonmp.ise_apartment_api.v1.RemoveApartmentV1Request\x1a\x36.ozonmp.ise_apartment_api.v1.RemoveApartmentV1Response\"%\x82\xd3\xe4\x93\x02\x1f*\x1d/v1/apartments/{apartment_id}BMZKgithub.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api;ise_apartment_apib\x06proto3')
   ,
   dependencies=[validate_dot_validate__pb2.DESCRIPTOR,google_dot_api_dot_annotations__pb2.DESCRIPTOR,])
 
@@ -41,7 +41,7 @@ _APARTMENT = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=_b('\372B\0042\002 \000'), json_name='id', file=DESCRIPTOR),
+      serialized_options=None, json_name='id', file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='object', full_name='ozonmp.ise_apartment_api.v1.Apartment.object', index=1,
       number=2, type=9, cpp_type=9, label=1,
@@ -69,7 +69,7 @@ _APARTMENT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=139,
-  serialized_end=245,
+  serialized_end=236,
 )
 
 
@@ -99,8 +99,8 @@ _DESCRIBEAPARTMENTV1REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=247,
-  serialized_end=319,
+  serialized_start=238,
+  serialized_end=310,
 )
 
 
@@ -130,8 +130,8 @@ _DESCRIBEAPARTMENTV1RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=321,
-  serialized_end=412,
+  serialized_start=312,
+  serialized_end=403,
 )
 
 
@@ -161,8 +161,8 @@ _CREATEAPARTMENTV1REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=414,
-  serialized_end=512,
+  serialized_start=405,
+  serialized_end=503,
 )
 
 
@@ -192,8 +192,8 @@ _CREATEAPARTMENTV1RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=514,
-  serialized_end=576,
+  serialized_start=505,
+  serialized_end=567,
 )
 
 
@@ -217,28 +217,28 @@ _LISTAPARTMENTSV1REQUEST_LISTAPARTMENTSPARAMS = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=_b('\372B\0042\002 \000'), json_name='offset', file=DESCRIPTOR),
+      serialized_options=None, json_name='offset', file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='limit', full_name='ozonmp.ise_apartment_api.v1.ListApartmentsV1Request.ListApartmentsParams.limit', index=2,
       number=3, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=_b('\372B\0042\002 \000'), json_name='limit', file=DESCRIPTOR),
+      serialized_options=None, json_name='limit', file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='object', full_name='ozonmp.ise_apartment_api.v1.ListApartmentsV1Request.ListApartmentsParams.object', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=_b('\372B\007r\005\020\001\030\350\007'), json_name='object', file=DESCRIPTOR),
+      serialized_options=None, json_name='object', file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='owner', full_name='ozonmp.ise_apartment_api.v1.ListApartmentsV1Request.ListApartmentsParams.owner', index=4,
       number=5, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=_b('\372B\007r\005\020\001\030\350\007'), json_name='owner', file=DESCRIPTOR),
+      serialized_options=None, json_name='owner', file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -251,8 +251,8 @@ _LISTAPARTMENTSV1REQUEST_LISTAPARTMENTSPARAMS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=706,
-  serialized_end=880,
+  serialized_start=697,
+  serialized_end=829,
 )
 
 _LISTAPARTMENTSV1REQUEST = _descriptor.Descriptor(
@@ -281,8 +281,8 @@ _LISTAPARTMENTSV1REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=579,
-  serialized_end=880,
+  serialized_start=570,
+  serialized_end=829,
 )
 
 
@@ -312,8 +312,8 @@ _LISTAPARTMENTSV1RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=882,
-  serialized_end=970,
+  serialized_start=831,
+  serialized_end=919,
 )
 
 
@@ -343,8 +343,8 @@ _REMOVEAPARTMENTV1REQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=972,
-  serialized_end=1042,
+  serialized_start=921,
+  serialized_end=991,
 )
 
 
@@ -374,8 +374,8 @@ _REMOVEAPARTMENTV1RESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1044,
-  serialized_end=1093,
+  serialized_start=993,
+  serialized_end=1042,
 )
 
 _DESCRIBEAPARTMENTV1RESPONSE.fields_by_name['value'].message_type = _APARTMENT
@@ -467,15 +467,10 @@ _sym_db.RegisterMessage(RemoveApartmentV1Response)
 
 
 DESCRIPTOR._options = None
-_APARTMENT.fields_by_name['id']._options = None
 _APARTMENT.fields_by_name['object']._options = None
 _APARTMENT.fields_by_name['owner']._options = None
 _DESCRIBEAPARTMENTV1REQUEST.fields_by_name['apartment_id']._options = None
 _CREATEAPARTMENTV1REQUEST.fields_by_name['value']._options = None
-_LISTAPARTMENTSV1REQUEST_LISTAPARTMENTSPARAMS.fields_by_name['offset']._options = None
-_LISTAPARTMENTSV1REQUEST_LISTAPARTMENTSPARAMS.fields_by_name['limit']._options = None
-_LISTAPARTMENTSV1REQUEST_LISTAPARTMENTSPARAMS.fields_by_name['object']._options = None
-_LISTAPARTMENTSV1REQUEST_LISTAPARTMENTSPARAMS.fields_by_name['owner']._options = None
 _REMOVEAPARTMENTV1REQUEST.fields_by_name['apartment_id']._options = None
 
 _ISEAPARTMENTAPISERVICE = _descriptor.ServiceDescriptor(
@@ -484,8 +479,8 @@ _ISEAPARTMENTAPISERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=1096,
-  serialized_end=1808,
+  serialized_start=1045,
+  serialized_end=1757,
   methods=[
   _descriptor.MethodDescriptor(
     name='DescribeApartmentV1',

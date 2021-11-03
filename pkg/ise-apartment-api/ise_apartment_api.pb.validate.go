@@ -40,12 +40,7 @@ func (m *Apartment) Validate() error {
 		return nil
 	}
 
-	if m.GetId() <= 0 {
-		return ApartmentValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-	}
+	// no validation rules for Id
 
 	if l := utf8.RuneCountInString(m.GetObject()); l < 1 || l > 1000 {
 		return ApartmentValidationError{
@@ -733,33 +728,13 @@ func (m *ListApartmentsV1Request_ListApartmentsParams) Validate() error {
 		return nil
 	}
 
-	if m.GetOffset() <= 0 {
-		return ListApartmentsV1Request_ListApartmentsParamsValidationError{
-			field:  "Offset",
-			reason: "value must be greater than 0",
-		}
-	}
+	// no validation rules for Offset
 
-	if m.GetLimit() <= 0 {
-		return ListApartmentsV1Request_ListApartmentsParamsValidationError{
-			field:  "Limit",
-			reason: "value must be greater than 0",
-		}
-	}
+	// no validation rules for Limit
 
-	if l := utf8.RuneCountInString(m.GetObject()); l < 1 || l > 1000 {
-		return ListApartmentsV1Request_ListApartmentsParamsValidationError{
-			field:  "Object",
-			reason: "value length must be between 1 and 1000 runes, inclusive",
-		}
-	}
+	// no validation rules for Object
 
-	if l := utf8.RuneCountInString(m.GetOwner()); l < 1 || l > 1000 {
-		return ListApartmentsV1Request_ListApartmentsParamsValidationError{
-			field:  "Owner",
-			reason: "value length must be between 1 and 1000 runes, inclusive",
-		}
-	}
+	// no validation rules for Owner
 
 	return nil
 }

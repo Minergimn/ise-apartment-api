@@ -80,7 +80,7 @@ func (o *apartmentAPI) CreateApartmentV1(
 	//o.repo.CreateApartment calling will be here
 	log.Debug().Str("CreateApartmentV1 input", req.String()).Msg("Just a log instead of an implementation")
 
-	return nil, nil
+	return &pb.CreateApartmentV1Response{}, nil
 }
 
 func (o *apartmentAPI) ListApartmentsV1(
@@ -97,7 +97,11 @@ func (o *apartmentAPI) ListApartmentsV1(
 	//o.repo.ListApartments calling will be here
 	log.Debug().Str("ListApartmentsV1 input", req.String()).Msg("Just a log instead of an implementation")
 
-	return nil, nil
+	var items []*pb.Apartment
+
+	return &pb.ListApartmentsV1Response{
+		Items: items,
+	}, nil
 }
 
 func (o *apartmentAPI) RemoveApartmentV1(
@@ -114,5 +118,5 @@ func (o *apartmentAPI) RemoveApartmentV1(
 	//o.repo.DeleteApartment calling will be here
 	log.Debug().Str("RemoveApartmentV1 input", req.String()).Msg("Just a log instead of an implementation")
 
-	return nil, nil
+	return &pb.RemoveApartmentV1Response{}, nil
 }
