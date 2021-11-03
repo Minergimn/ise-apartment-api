@@ -11,8 +11,6 @@ if typing.TYPE_CHECKING:
 
 import validate.validate_pb2
 import google.api.annotations_pb2
-import google.protobuf.empty_pb2
-import google.protobuf.timestamp_pb2
 import ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2
 
 
@@ -27,11 +25,11 @@ class IseApartmentApiServiceBase(abc.ABC):
         pass
 
     @abc.abstractmethod
-    async def ListApartmentV1(self, stream: 'grpclib.server.Stream[ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.ListApartmentV1Request, ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.ListApartmentV1Response]') -> None:
+    async def ListApartmentsV1(self, stream: 'grpclib.server.Stream[ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.ListApartmentsV1Request, ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.ListApartmentsV1Response]') -> None:
         pass
 
     @abc.abstractmethod
-    async def RemoveApartmentV1(self, stream: 'grpclib.server.Stream[ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.RemoveApartmentV1Request, google.protobuf.empty_pb2.Empty]') -> None:
+    async def RemoveApartmentV1(self, stream: 'grpclib.server.Stream[ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.RemoveApartmentV1Request, ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.RemoveApartmentV1Response]') -> None:
         pass
 
     def __mapping__(self) -> typing.Dict[str, grpclib.const.Handler]:
@@ -48,17 +46,17 @@ class IseApartmentApiServiceBase(abc.ABC):
                 ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.CreateApartmentV1Request,
                 ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.CreateApartmentV1Response,
             ),
-            '/ozonmp.ise_apartment_api.v1.IseApartmentApiService/ListApartmentV1': grpclib.const.Handler(
-                self.ListApartmentV1,
+            '/ozonmp.ise_apartment_api.v1.IseApartmentApiService/ListApartmentsV1': grpclib.const.Handler(
+                self.ListApartmentsV1,
                 grpclib.const.Cardinality.UNARY_UNARY,
-                ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.ListApartmentV1Request,
-                ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.ListApartmentV1Response,
+                ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.ListApartmentsV1Request,
+                ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.ListApartmentsV1Response,
             ),
             '/ozonmp.ise_apartment_api.v1.IseApartmentApiService/RemoveApartmentV1': grpclib.const.Handler(
                 self.RemoveApartmentV1,
                 grpclib.const.Cardinality.UNARY_UNARY,
                 ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.RemoveApartmentV1Request,
-                google.protobuf.empty_pb2.Empty,
+                ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.RemoveApartmentV1Response,
             ),
         }
 
@@ -78,15 +76,15 @@ class IseApartmentApiServiceStub:
             ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.CreateApartmentV1Request,
             ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.CreateApartmentV1Response,
         )
-        self.ListApartmentV1 = grpclib.client.UnaryUnaryMethod(
+        self.ListApartmentsV1 = grpclib.client.UnaryUnaryMethod(
             channel,
-            '/ozonmp.ise_apartment_api.v1.IseApartmentApiService/ListApartmentV1',
-            ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.ListApartmentV1Request,
-            ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.ListApartmentV1Response,
+            '/ozonmp.ise_apartment_api.v1.IseApartmentApiService/ListApartmentsV1',
+            ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.ListApartmentsV1Request,
+            ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.ListApartmentsV1Response,
         )
         self.RemoveApartmentV1 = grpclib.client.UnaryUnaryMethod(
             channel,
             '/ozonmp.ise_apartment_api.v1.IseApartmentApiService/RemoveApartmentV1',
             ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.RemoveApartmentV1Request,
-            google.protobuf.empty_pb2.Empty,
+            ozonmp.ise_apartment_api.v1.ise_apartment_api_pb2.RemoveApartmentV1Response,
         )

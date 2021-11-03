@@ -7,7 +7,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -23,10 +22,10 @@ type IseApartmentApiServiceClient interface {
 	DescribeApartmentV1(ctx context.Context, in *DescribeApartmentV1Request, opts ...grpc.CallOption) (*DescribeApartmentV1Response, error)
 	// CreateApartmentV1 - Create an apartment
 	CreateApartmentV1(ctx context.Context, in *CreateApartmentV1Request, opts ...grpc.CallOption) (*CreateApartmentV1Response, error)
-	// ListApartmentV1 - List of apartments
-	ListApartmentV1(ctx context.Context, in *ListApartmentV1Request, opts ...grpc.CallOption) (*ListApartmentV1Response, error)
+	// ListApartmentsV1 - List of apartments
+	ListApartmentsV1(ctx context.Context, in *ListApartmentsV1Request, opts ...grpc.CallOption) (*ListApartmentsV1Response, error)
 	// RemoveApartmentV1 - Remove an apartment
-	RemoveApartmentV1(ctx context.Context, in *RemoveApartmentV1Request, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RemoveApartmentV1(ctx context.Context, in *RemoveApartmentV1Request, opts ...grpc.CallOption) (*RemoveApartmentV1Response, error)
 }
 
 type iseApartmentApiServiceClient struct {
@@ -55,17 +54,17 @@ func (c *iseApartmentApiServiceClient) CreateApartmentV1(ctx context.Context, in
 	return out, nil
 }
 
-func (c *iseApartmentApiServiceClient) ListApartmentV1(ctx context.Context, in *ListApartmentV1Request, opts ...grpc.CallOption) (*ListApartmentV1Response, error) {
-	out := new(ListApartmentV1Response)
-	err := c.cc.Invoke(ctx, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/ListApartmentV1", in, out, opts...)
+func (c *iseApartmentApiServiceClient) ListApartmentsV1(ctx context.Context, in *ListApartmentsV1Request, opts ...grpc.CallOption) (*ListApartmentsV1Response, error) {
+	out := new(ListApartmentsV1Response)
+	err := c.cc.Invoke(ctx, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/ListApartmentsV1", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *iseApartmentApiServiceClient) RemoveApartmentV1(ctx context.Context, in *RemoveApartmentV1Request, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *iseApartmentApiServiceClient) RemoveApartmentV1(ctx context.Context, in *RemoveApartmentV1Request, opts ...grpc.CallOption) (*RemoveApartmentV1Response, error) {
+	out := new(RemoveApartmentV1Response)
 	err := c.cc.Invoke(ctx, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/RemoveApartmentV1", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -81,10 +80,10 @@ type IseApartmentApiServiceServer interface {
 	DescribeApartmentV1(context.Context, *DescribeApartmentV1Request) (*DescribeApartmentV1Response, error)
 	// CreateApartmentV1 - Create an apartment
 	CreateApartmentV1(context.Context, *CreateApartmentV1Request) (*CreateApartmentV1Response, error)
-	// ListApartmentV1 - List of apartments
-	ListApartmentV1(context.Context, *ListApartmentV1Request) (*ListApartmentV1Response, error)
+	// ListApartmentsV1 - List of apartments
+	ListApartmentsV1(context.Context, *ListApartmentsV1Request) (*ListApartmentsV1Response, error)
 	// RemoveApartmentV1 - Remove an apartment
-	RemoveApartmentV1(context.Context, *RemoveApartmentV1Request) (*emptypb.Empty, error)
+	RemoveApartmentV1(context.Context, *RemoveApartmentV1Request) (*RemoveApartmentV1Response, error)
 	mustEmbedUnimplementedIseApartmentApiServiceServer()
 }
 
@@ -98,10 +97,10 @@ func (UnimplementedIseApartmentApiServiceServer) DescribeApartmentV1(context.Con
 func (UnimplementedIseApartmentApiServiceServer) CreateApartmentV1(context.Context, *CreateApartmentV1Request) (*CreateApartmentV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateApartmentV1 not implemented")
 }
-func (UnimplementedIseApartmentApiServiceServer) ListApartmentV1(context.Context, *ListApartmentV1Request) (*ListApartmentV1Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListApartmentV1 not implemented")
+func (UnimplementedIseApartmentApiServiceServer) ListApartmentsV1(context.Context, *ListApartmentsV1Request) (*ListApartmentsV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListApartmentsV1 not implemented")
 }
-func (UnimplementedIseApartmentApiServiceServer) RemoveApartmentV1(context.Context, *RemoveApartmentV1Request) (*emptypb.Empty, error) {
+func (UnimplementedIseApartmentApiServiceServer) RemoveApartmentV1(context.Context, *RemoveApartmentV1Request) (*RemoveApartmentV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveApartmentV1 not implemented")
 }
 func (UnimplementedIseApartmentApiServiceServer) mustEmbedUnimplementedIseApartmentApiServiceServer() {
@@ -154,20 +153,20 @@ func _IseApartmentApiService_CreateApartmentV1_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _IseApartmentApiService_ListApartmentV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListApartmentV1Request)
+func _IseApartmentApiService_ListApartmentsV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListApartmentsV1Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(IseApartmentApiServiceServer).ListApartmentV1(ctx, in)
+		return srv.(IseApartmentApiServiceServer).ListApartmentsV1(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/ListApartmentV1",
+		FullMethod: "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/ListApartmentsV1",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(IseApartmentApiServiceServer).ListApartmentV1(ctx, req.(*ListApartmentV1Request))
+		return srv.(IseApartmentApiServiceServer).ListApartmentsV1(ctx, req.(*ListApartmentsV1Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -206,8 +205,8 @@ var IseApartmentApiService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _IseApartmentApiService_CreateApartmentV1_Handler,
 		},
 		{
-			MethodName: "ListApartmentV1",
-			Handler:    _IseApartmentApiService_ListApartmentV1_Handler,
+			MethodName: "ListApartmentsV1",
+			Handler:    _IseApartmentApiService_ListApartmentsV1_Handler,
 		},
 		{
 			MethodName: "RemoveApartmentV1",
