@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package ozonmp.ise_apartment_api.v1;
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api;ise_apartment_api";
+
+// IseApartmentApiService - Service for working with apartments
+service IseApartmentApiService {
+  // DescribeApartmentV1 - Describe an apartment
+  rpc DescribeApartmentV1(DescribeApartmentV1Request) returns (DescribeApartmentV1Response) {
+    option (google.api.http) = {
+      get: "/v1/apartments/{apartment_id}"
+    };
+  }
+  // CreateApartmentV1 - Create an apartment
+  rpc CreateApartmentV1(CreateApartmentV1Request) returns (CreateApartmentV1Response) {
+    option (google.api.http) = {
+      post: "/v1/apartments/create"
+      body: "value"
+    };
+  }
+  // ListApartmentsV1 - List of apartments
+  rpc ListApartmentsV1(ListApartmentsV1Request) returns (ListApartmentsV1Response) {
+    option (google.api.http) = {
+      post: "/v1/apartments/list"
+      body: "params"
+    };
+  }
+  // RemoveApartmentV1 - Remove an apartment
+  rpc RemoveApartmentV1(RemoveApartmentV1Request) returns (RemoveApartmentV1Response) {
+    option (google.api.http) = {
+      delete: "/v1/apartments/{apartment_id}"
+    };
+  }
+}
+
+message Apartment {
+  uint64 id  = 1;
+  string object = 2 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+  string owner = 3 [(validate.rules).string = {min_len: 1, max_len: 1000}];
+}
+
+message DescribeApartmentV1Request {
+  uint64 apartment_id = 1 [(validate.rules).uint64.gt = 0];
+}
+
+message DescribeApartmentV1Response {
+  Apartment value = 1;
+}
+
+message CreateApartmentV1Request {
+  Apartment value = 1 [(validate.rules).message.required = true];
+}
+
+message CreateApartmentV1Response {
+  uint64 apartment_id = 1;
+}
+
+message ListApartmentsV1Request {
+  message ListApartmentsParams {
+    repeated uint64 ids  = 1;
+    uint64 offset = 2;
+    uint64 limit = 3;
+    string object = 4;
+    string owner = 5;
+  }
+  ListApartmentsParams params = 1;
+}
+
+message ListApartmentsV1Response {
+  repeated Apartment items = 1;
+}
+
+message RemoveApartmentV1Request {
+  uint64 apartment_id = 1 [(validate.rules).uint64.gt = 0];
+}
+
+message RemoveApartmentV1Response {
+  bool found = 1;
+}
+

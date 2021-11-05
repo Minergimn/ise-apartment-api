@@ -3,11 +3,11 @@ package retranslator
 import (
 	"time"
 
-	"github.com/ozonmp/omp-demo-api/internal/app/consumer"
-	"github.com/ozonmp/omp-demo-api/internal/app/producer"
-	"github.com/ozonmp/omp-demo-api/internal/app/repo"
-	"github.com/ozonmp/omp-demo-api/internal/app/sender"
-	"github.com/ozonmp/omp-demo-api/internal/model"
+	"github.com/ozonmp/ise-apartment-api/internal/app/consumer"
+	"github.com/ozonmp/ise-apartment-api/internal/app/producer"
+	"github.com/ozonmp/ise-apartment-api/internal/app/repo"
+	"github.com/ozonmp/ise-apartment-api/internal/app/sender"
+	"github.com/ozonmp/ise-apartment-api/internal/model"
 
 	"github.com/gammazero/workerpool"
 )

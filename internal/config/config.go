@@ -47,8 +47,16 @@ type Grpc struct {
 
 // Rest - contains parameter rest json connection.
 type Rest struct {
-	Port int    `yaml:"port"`
-	Host string `yaml:"host"`
+	Port               int      `yaml:"port"`
+	Host               string   `yaml:"host"`
+	AllowedCORSOrigins []string `yaml:"allowedCorsOrigins"`
+}
+
+// Swagger - contains parameters for swagger port
+type Swagger struct {
+	Port     int    `yaml:"port"`
+	Host     string `yaml:"host"`
+	Filepath string `yaml:"filepath"`
 }
 
 // Project - contains all parameters project information.
@@ -101,6 +109,7 @@ type Config struct {
 	Jaeger   Jaeger   `yaml:"jaeger"`
 	Kafka    Kafka    `yaml:"kafka"`
 	Status   Status   `yaml:"status"`
+	Swagger  Swagger  `yaml:"swagger"`
 }
 
 // ReadConfigYML - read configurations from file and init instance Config.
