@@ -23,7 +23,7 @@ func Test_apartmentAPI_CreateApartmentV1(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		req 	ise_apartment_api.CreateApartmentV1Request
+		req     ise_apartment_api.CreateApartmentV1Request
 		want    *ise_apartment_api.CreateApartmentV1Response
 		wantErr bool
 	}{
@@ -91,6 +91,7 @@ const (
 	letterIdxMask = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
 	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
 )
+
 var src = rand.NewSource(time.Now().UnixNano())
 
 func RandStringBytesMaskImprSrcSB(n int) string {

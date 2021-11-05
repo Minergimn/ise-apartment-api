@@ -24,4 +24,3 @@ type apartmentAPI struct {
 func NewApartmentAPI(r repo.Repo) pb.IseApartmentApiServiceServer {
 	return &apartmentAPI{repo: r}
 }
-

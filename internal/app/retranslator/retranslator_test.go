@@ -35,7 +35,7 @@ func TestSendAndRemove(t *testing.T) {
 	repo := mocks.NewMockEventRepo(ctrl)
 	sender := mocks.NewMockEventSender(ctrl)
 	cfg := getConfig(repo, sender)
-	
+
 	eventCount := 10
 	events := generateEvents(eventCount)
 	lockedEvents := make(map[uint64]bool)
@@ -101,10 +101,10 @@ func TestSendingFail_AllEventMustBeUnlocked(t *testing.T) {
 
 	mockMethodRepoLock(repo, eventsLock, events, lockedEvents)
 
-	sender.EXPECT().Send(gomock.Any()).DoAndReturn(func(e *apartment.ApartmentEvent) (err error){
+	sender.EXPECT().Send(gomock.Any()).DoAndReturn(func(e *apartment.ApartmentEvent) (err error) {
 		return errors.New(fmt.Sprintf("Fail to send event #%d", e.ID))
 	}).AnyTimes()
-	repo.EXPECT().Unlock(gomock.Any()).DoAndReturn(func(ids []uint64) (err error){
+	repo.EXPECT().Unlock(gomock.Any()).DoAndReturn(func(ids []uint64) (err error) {
 		eventsLock.Lock()
 		defer eventsLock.Unlock()
 
@@ -115,13 +115,12 @@ func TestSendingFail_AllEventMustBeUnlocked(t *testing.T) {
 		return nil
 	}).AnyTimes()
 
-
 	retranslator := NewRetranslator(cfg)
 	retranslator.Start()
 	time.Sleep(time.Second * 10)
 	retranslator.Close()
 
-	for _, status := range lockedEvents{
+	for _, status := range lockedEvents {
 		if status {
 			t.Errorf("Some event is locked")
 			t.FailNow()

@@ -21,7 +21,6 @@ func (o *apartmentAPI) ListApartmentsV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	//o.repo.ListApartments calling will be here
 	log.Debug().Str("ListApartmentsV1 input", req.String()).Msg("Just a log instead of an implementation")
 
 	var items []*ise_apartment_api.Apartment

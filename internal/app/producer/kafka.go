@@ -47,7 +47,7 @@ func NewKafkaProducer(
 		n:          n,
 		sender:     sender,
 		events:     events,
-		repo: 		repo,
+		repo:       repo,
 		workerPool: workerPool,
 		wg:         wg,
 		done:       done,
@@ -66,16 +66,16 @@ func (p *producer) Start() {
 						p.workerPool.Submit(func() {
 							log.Printf("Sending of event %s failed with error: %t", event.String(), err)
 
-							if err = p.repo.Unlock([]uint64{event.ID}); err != nil{
-								log.Printf("Unlock event %s has error: %t",event.String(), err)
+							if err = p.repo.Unlock([]uint64{event.ID}); err != nil {
+								log.Printf("Unlock event %s has error: %t", event.String(), err)
 							}
 						})
 					} else {
 						p.workerPool.Submit(func() {
 							log.Printf("Sending of event %d was succeeded", event.ID)
 
-							if err = p.repo.Remove([]uint64{event.ID}); err != nil{
-								log.Printf("Removing event %s has error: %t",event.String(), err)
+							if err = p.repo.Remove([]uint64{event.ID}); err != nil {
+								log.Printf("Removing event %s has error: %t", event.String(), err)
 							}
 						})
 					}

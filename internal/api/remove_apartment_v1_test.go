@@ -2,11 +2,12 @@ package api
 
 import (
 	"context"
+	"reflect"
+	"testing"
+
 	"github.com/golang/mock/gomock"
 	"github.com/ozonmp/ise-apartment-api/internal/mocks"
 	ise_apartment_api "github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
-	"reflect"
-	"testing"
 )
 
 func Test_apartmentAPI_RemoveApartmentV1(t *testing.T) {
@@ -17,19 +18,19 @@ func Test_apartmentAPI_RemoveApartmentV1(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		req 	ise_apartment_api.RemoveApartmentV1Request
+		req     ise_apartment_api.RemoveApartmentV1Request
 		want    *ise_apartment_api.RemoveApartmentV1Response
 		wantErr bool
 	}{
 		{
 			name:    "Id more than 0. Validation should pass",
-			req:     ise_apartment_api.RemoveApartmentV1Request{ ApartmentId: 1},
+			req:     ise_apartment_api.RemoveApartmentV1Request{ApartmentId: 1},
 			want:    &ise_apartment_api.RemoveApartmentV1Response{},
 			wantErr: false,
 		},
 		{
 			name:    "Id is 0. Validation should fail",
-			req:     ise_apartment_api.RemoveApartmentV1Request{ ApartmentId: 0},
+			req:     ise_apartment_api.RemoveApartmentV1Request{ApartmentId: 0},
 			wantErr: true,
 		},
 	}

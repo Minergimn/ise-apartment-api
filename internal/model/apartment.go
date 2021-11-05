@@ -29,6 +29,7 @@ type ApartmentEvent struct {
 	Status EventStatus
 	Entity *Apartment
 }
+
 func (e *ApartmentEvent) String() string {
 	return fmt.Sprintf("ApartmentEvent id: %d type: %s status: %s apartment id: %d", e.ID, e.Type, e.Status, e.Entity.ID)
 }

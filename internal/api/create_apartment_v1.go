@@ -21,7 +21,6 @@ func (o *apartmentAPI) CreateApartmentV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	//o.repo.CreateApartment calling will be here
 	log.Debug().Str("CreateApartmentV1 input", req.String()).Msg("Just a log instead of an implementation")
 
 	return &ise_apartment_api.CreateApartmentV1Response{}, nil

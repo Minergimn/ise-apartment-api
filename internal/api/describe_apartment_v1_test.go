@@ -19,7 +19,7 @@ func Test_apartmentAPI_DescribeApartmentV1(t *testing.T) {
 	api := NewApartmentAPI(repo)
 	ctx := context.Background()
 
-	repo.EXPECT().DescribeApartment(gomock.Any(), gomock.Any()).DoAndReturn(func(ctx2 context.Context, id uint64) (*model.Apartment, error){
+	repo.EXPECT().DescribeApartment(gomock.Any(), gomock.Any()).DoAndReturn(func(ctx2 context.Context, id uint64) (*model.Apartment, error) {
 		a := new(model.Apartment)
 		a.ID = id
 		a.Owner = fmt.Sprintf("%d", id)
@@ -29,19 +29,19 @@ func Test_apartmentAPI_DescribeApartmentV1(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		req 	ise_apartment_api.DescribeApartmentV1Request
+		req     ise_apartment_api.DescribeApartmentV1Request
 		want    *ise_apartment_api.DescribeApartmentV1Response
 		wantErr bool
 	}{
 		{
 			name:    "Id more than 0. Validation should pass",
-			req:     ise_apartment_api.DescribeApartmentV1Request{ ApartmentId: 1},
-			want:    &ise_apartment_api.DescribeApartmentV1Response{Value: getApartment(1, "1", "1"),},
+			req:     ise_apartment_api.DescribeApartmentV1Request{ApartmentId: 1},
+			want:    &ise_apartment_api.DescribeApartmentV1Response{Value: getApartment(1, "1", "1")},
 			wantErr: false,
 		},
 		{
 			name:    "Id is 0. Validation should fail",
-			req:     ise_apartment_api.DescribeApartmentV1Request{ ApartmentId: 0},
+			req:     ise_apartment_api.DescribeApartmentV1Request{ApartmentId: 0},
 			wantErr: true,
 		},
 	}

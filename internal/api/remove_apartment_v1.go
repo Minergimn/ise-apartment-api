@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
-	
+
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -21,7 +21,6 @@ func (o *apartmentAPI) RemoveApartmentV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	//o.repo.DeleteApartment calling will be here
 	log.Debug().Str("RemoveApartmentV1 input", req.String()).Msg("Just a log instead of an implementation")
 
 	return &ise_apartment_api.RemoveApartmentV1Response{}, nil
