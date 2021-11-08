@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (o *apartmentAPI) ListApartmentsV1(
+func (a *apartmentAPI) ListApartmentsV1(
 	ctx context.Context,
 	req *ise_apartment_api.ListApartmentsV1Request,
 ) (*ise_apartment_api.ListApartmentsV1Response, error) {
@@ -21,9 +21,34 @@ func (o *apartmentAPI) ListApartmentsV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	log.Debug().Str("ListApartmentsV1 input", req.String()).Msg("Just a log instead of an implementation")
+	offset := uint64(0)
+	limit := uint64(0)
+	if req.Params != nil{
+		offset = req.Params.Offset
+		limit = req.Params.Limit
+	}
+
+	apartments, err := a.repo.ListApartments(ctx, offset, limit)
+	if err != nil {
+		log.Error().Err(err).Msg("ListApartmentsV1 - failed")
+
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	if apartments == nil {
+		log.Debug().Str("params", req.Params.String()).Msg("apartments not found")
+		totalApartmentNotFound.Inc()
+
+		return nil, status.Error(codes.NotFound, "apartments not found")
+	}
+
+	log.Debug().Msg("ListApartmentsV1 - success")
 
 	var items []*ise_apartment_api.Apartment
+
+	for _, apartment := range apartments {
+		items = append(items, a.mapApartmentFromDbToApi(&apartment))
+	}
 
 	return &ise_apartment_api.ListApartmentsV1Response{
 		Items: items,

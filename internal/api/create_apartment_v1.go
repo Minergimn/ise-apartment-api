@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (o *apartmentAPI) CreateApartmentV1(
+func (a *apartmentAPI) CreateApartmentV1(
 	ctx context.Context,
 	req *ise_apartment_api.CreateApartmentV1Request,
 ) (*ise_apartment_api.CreateApartmentV1Response, error) {
@@ -21,7 +21,16 @@ func (o *apartmentAPI) CreateApartmentV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	log.Debug().Str("CreateApartmentV1 input", req.String()).Msg("Just a log instead of an implementation")
+	id, err := a.repo.CreateApartment(ctx, a.mapApartmentFromApiToDb(req.Value))
+	if err != nil {
+		log.Error().Err(err).Msg("CreateApartmentV1 - failed")
 
-	return &ise_apartment_api.CreateApartmentV1Response{}, nil
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	log.Debug().Msg("CreateApartmentV1 - success")
+
+	return &ise_apartment_api.CreateApartmentV1Response{
+		ApartmentId: id,
+	}, nil
 }
