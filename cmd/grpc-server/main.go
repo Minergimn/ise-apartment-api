@@ -2,8 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
-
 	"github.com/pressly/goose/v3"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -43,14 +41,7 @@ func main() {
 		zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	}
 
-	dsn := fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=%v",
-		cfg.Database.Host,
-		cfg.Database.Port,
-		cfg.Database.User,
-		cfg.Database.Password,
-		cfg.Database.Name,
-		cfg.Database.SslMode,
-	)
+	dsn := cfg.Database.DSN
 
 	db, err := database.NewPostgres(dsn, cfg.Database.Driver)
 	if err != nil {
@@ -58,7 +49,7 @@ func main() {
 	}
 	defer db.Close()
 
-	*migration = false // todo: need to delete this line for homework-4
+	*migration = true
 	if *migration {
 		if err = goose.Up(db.DB, cfg.Database.Migrations); err != nil {
 			log.Error().Err(err).Msg("Migration failed")

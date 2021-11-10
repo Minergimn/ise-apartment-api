@@ -4,7 +4,7 @@ import (
 	"embed"
 
 	"github.com/ozonmp/ise-apartment-api/internal/config"
-	"github.com/ozonmp/ise-apartment-api/internal/pkg/db"
+	db "github.com/ozonmp/ise-apartment-api/internal/database"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/pressly/goose/v3"
@@ -20,7 +20,7 @@ func main() {
 	}
 	cfg := config.GetConfigInstance()
 
-	conn, err := db.ConnectDB(&cfg.Database)
+	conn, err := db.NewPostgres(cfg.Database.DSN, cfg.Database.Driver)
 	if err != nil {
 		log.Fatal().Err(err).Msg("sql.Open() error")
 	}

@@ -36,12 +36,7 @@ status:
   versionPath: /version
 
 database:
-  host: postgres
-  port: 5432
-  user: docker
-  password: docker
-  name: ise_apartment_api
-  sslmode: disable
+  dsn: "host=postgres port=5432 user=user password=password dbname=apartment_db sslmode=disable"
   migrations: migrations
   driver: pgx
 
