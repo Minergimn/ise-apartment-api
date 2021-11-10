@@ -15,5 +15,16 @@ CREATE TABLE IF NOT EXISTS apartments_events (
    updated timestamp NULL
 );
 
+CREATE INDEX IF NOT EXISTS apartments_object ON apartments (object);
+CREATE INDEX IF NOT EXISTS apartments_owner ON apartments (owner);
+CREATE INDEX IF NOT EXISTS apartments_events_apartment_id ON apartments_events (apartment_id);
+CREATE INDEX IF NOT EXISTS apartments_events_status ON apartments_events (status);
+
 -- +goose Down
-DROP TABLE apartment;
+DROP INDEX apartments_object;
+DROP INDEX apartments_owner;
+DROP INDEX apartments_events_apartment_id;
+DROP INDEX apartments_events_status;
+
+DROP TABLE apartments;
+DROP TABLE apartments_events;

@@ -37,7 +37,7 @@ status:
 
 database:
   dsn: "host=postgres port=5432 user=user password=password dbname=apartment_db sslmode=disable"
-  migrations: migrations
+  migrations: "migrations/migrations"
   driver: pgx
 
 kafka:
