@@ -23,12 +23,18 @@ func (a *apartmentAPI) ListApartmentsV1(
 
 	offset := uint64(0)
 	limit := uint64(0)
+	owner := ""
+	object := ""
+	var ids []uint64
 	if req.Params != nil{
 		offset = req.Params.Offset
 		limit = req.Params.Limit
+		owner = req.Params.Owner
+		object = req.Params.Object
+		ids = req.Params.Ids
 	}
 
-	apartments, err := a.repo.ListApartments(ctx, offset, limit)
+	apartments, err := a.repo.ListApartments(ctx, offset, limit, owner, object, ids)
 	if err != nil {
 		log.Error().Err(err).Msg("ListApartmentsV1 - failed")
 

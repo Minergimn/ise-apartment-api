@@ -13,7 +13,7 @@ import (
 // Repo is DAO for Apartment
 type Repo interface {
 	GetApartment(ctx context.Context, apartmentID uint64) (*model.Apartment, error)
-	ListApartments(ctx context.Context, cursor uint64, limit uint64) ([]model.Apartment, error)
+	ListApartments(ctx context.Context, cursor uint64, limit uint64, owner string, object string, ids []uint64) ([]model.Apartment, error)
 	CreateApartment(ctx context.Context, apartment *model.Apartment) (uint64, error)
 	DeleteApartment(ctx context.Context, apartmentID uint64) (bool, error)
 }
@@ -41,7 +41,7 @@ func (r *repo) GetApartment(ctx context.Context, apartmentID uint64) (*model.Apa
 	return &res, err
 }
 
-func (r *repo) ListApartments(ctx context.Context, cursor uint64, limit uint64) ([]model.Apartment, error) {
+func (r *repo) ListApartments(ctx context.Context, cursor uint64, limit uint64, owner string, object string, ids []uint64) ([]model.Apartment, error) {
 	query := sq.Select("*").PlaceholderFormat(sq.Dollar).From("apartments").OrderBy("id")
 
 	if cursor > 0 {
@@ -50,6 +50,18 @@ func (r *repo) ListApartments(ctx context.Context, cursor uint64, limit uint64) 
 
 	if limit > 0 {
 		query = query.Limit(limit)
+	}
+
+	if owner != "" {
+		query = query.Where(sq.Eq{"owner": owner})
+	}
+
+	if object != "" {
+		query = query.Where(sq.Eq{"object": object})
+	}
+
+	if ids != nil{
+		query = query.Where(sq.Eq{"id": ids})
 	}
 
 	s, args, err := query.ToSql()
