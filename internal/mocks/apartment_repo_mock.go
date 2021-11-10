@@ -35,7 +35,7 @@ func (m *MockRepo) EXPECT() *MockRepoMockRecorder {
 	return m.recorder
 }
 
-// AddApartment mocks base method.
+// CreateApartment mocks base method.
 func (m *MockRepo) CreateApartment(arg0 context.Context, arg1 *apartment.Apartment) (uint64, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateApartment", arg0, arg1)
@@ -44,10 +44,25 @@ func (m *MockRepo) CreateApartment(arg0 context.Context, arg1 *apartment.Apartme
 	return ret0, ret1
 }
 
-// AddApartment indicates an expected call of AddApartment.
-func (mr *MockRepoMockRecorder) AddApartment(arg0, arg1 interface{}) *gomock.Call {
+// CreateApartment indicates an expected call of CreateApartment.
+func (mr *MockRepoMockRecorder) CreateApartment(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateApartment", reflect.TypeOf((*MockRepo)(nil).CreateApartment), arg0, arg1)
+}
+
+// DeleteApartment mocks base method.
+func (m *MockRepo) DeleteApartment(arg0 context.Context, arg1 uint64) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteApartment", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteApartment indicates an expected call of DeleteApartment.
+func (mr *MockRepoMockRecorder) DeleteApartment(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteApartment", reflect.TypeOf((*MockRepo)(nil).DeleteApartment), arg0, arg1)
 }
 
 // GetApartment mocks base method.
@@ -66,31 +81,16 @@ func (mr *MockRepoMockRecorder) GetApartment(arg0, arg1 interface{}) *gomock.Cal
 }
 
 // ListApartments mocks base method.
-func (m *MockRepo) ListApartments(arg0 context.Context, arg1, arg2 uint64) ([]apartment.Apartment, error) {
+func (m *MockRepo) ListApartments(arg0 context.Context, arg1, arg2 uint64, arg3, arg4 string, arg5 []uint64) ([]apartment.Apartment, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListApartments", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "ListApartments", arg0, arg1, arg2, arg3, arg4, arg5)
 	ret0, _ := ret[0].([]apartment.Apartment)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ListApartments indicates an expected call of ListApartments.
-func (mr *MockRepoMockRecorder) ListApartments(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockRepoMockRecorder) ListApartments(arg0, arg1, arg2, arg3, arg4, arg5 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListApartments", reflect.TypeOf((*MockRepo)(nil).ListApartments), arg0, arg1, arg2)
-}
-
-// RemoveApartment mocks base method.
-func (m *MockRepo) DeleteApartment(arg0 context.Context, arg1 uint64) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteApartment", arg0, arg1)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// RemoveApartment indicates an expected call of RemoveApartment.
-func (mr *MockRepoMockRecorder) RemoveApartment(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteApartment", reflect.TypeOf((*MockRepo)(nil).DeleteApartment), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListApartments", reflect.TypeOf((*MockRepo)(nil).ListApartments), arg0, arg1, arg2, arg3, arg4, arg5)
 }

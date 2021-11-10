@@ -40,4 +40,3 @@ func (a *apartmentAPI) DescribeApartmentV1(
 		Value: a.mapApartmentFromDbToApi(apartment),
 	}, nil
 }
-

@@ -60,7 +60,7 @@ func (r *repo) ListApartments(ctx context.Context, cursor uint64, limit uint64, 
 		query = query.Where(sq.Eq{"object": object})
 	}
 
-	if ids != nil{
+	if ids != nil {
 		query = query.Where(sq.Eq{"id": ids})
 	}
 

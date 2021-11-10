@@ -26,7 +26,7 @@ func (a *apartmentAPI) ListApartmentsV1(
 	owner := ""
 	object := ""
 	var ids []uint64
-	if req.Params != nil{
+	if req.Params != nil {
 		offset = req.Params.Offset
 		limit = req.Params.Limit
 		owner = req.Params.Owner
