@@ -3,6 +3,8 @@ package repo
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"fmt"
 
 	model "github.com/ozonmp/ise-apartment-api/internal/model"
 
@@ -36,13 +38,18 @@ func (r *repo) GetApartment(ctx context.Context, apartmentID uint64) (*model.Apa
 		return nil, err
 	}
 	var res model.Apartment
-	err = r.db.SelectContext(ctx, &res, s, args...)
+	err = r.db.GetContext(ctx, &res, s, args...)
+
+	if res.Status == model.Deleted {
+		return nil, errors.New(fmt.Sprintf("Apartment id %d found but in deleted status", apartmentID))
+	}
 
 	return &res, err
 }
 
 func (r *repo) ListApartments(ctx context.Context, cursor uint64, limit uint64, owner string, object string, ids []uint64) ([]model.Apartment, error) {
 	query := sq.Select("*").PlaceholderFormat(sq.Dollar).From("apartments").OrderBy("id")
+	query = query.Where(sq.Eq{"status": 0})
 
 	if cursor > 0 {
 		query = query.Offset(cursor)
@@ -76,7 +83,7 @@ func (r *repo) ListApartments(ctx context.Context, cursor uint64, limit uint64, 
 
 func (r *repo) CreateApartment(ctx context.Context, apartment *model.Apartment) (uint64, error) {
 	query := sq.Insert("apartments").PlaceholderFormat(sq.Dollar).Columns(
-		"object", "owner").Values(apartment.Object, apartment.Owner).Suffix("RETURNING id").RunWith(r.db)
+		"object", "owner", "status").Values(apartment.Object, apartment.Owner, 0).Suffix("RETURNING id").RunWith(r.db)
 
 	rows, err := query.QueryContext(ctx)
 	if err != nil {
