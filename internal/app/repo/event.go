@@ -69,13 +69,15 @@ func (e eventRepo) Add(events []apartment.ApartmentEvent) error {
 		"type",
 		"status",
 		"payload",
+		"is_deleted",
+		"is_locked",
 		"updated")
 
 	for _, event := range events {
-		query = query.Values(event.ApartmentId, event.Type, event.Status, event.Entity, time.Now().UnixNano())
+		query = query.Values(event.ApartmentId, event.Type.String(), event.Status.String(), event.Entity, false, false, time.Now())
 	}
 
-	query = query.RunWith(e.db)
+	query = query.Suffix("RETURNING id").RunWith(e.db)
 
 	rows, err := query.QueryContext(context.Background())
 	if err != nil {

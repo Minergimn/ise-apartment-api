@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	apartment "github.com/ozonmp/ise-apartment-api/internal/model"
 
 	"github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
 
@@ -21,9 +22,28 @@ func (a *apartmentAPI) CreateApartmentV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	id, err := a.repo.CreateApartment(ctx, a.mapApartmentFromApiToDb(req.Value))
+	apt := a.mapApartmentFromApiToDb(req.Value)
+
+	id, err := a.repo.CreateApartment(ctx, apt)
 	if err != nil {
-		log.Error().Err(err).Msg("CreateApartmentV1 - failed")
+		log.Error().Err(err).Msg("CreateApartmentV1 - adding to apartment db failed")
+
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	apt.ID = id
+	createEvent := &apartment.ApartmentEvent{
+		ApartmentId: id,
+		Type: apartment.Created,
+		Status: apartment.Deferred,
+		Entity: apt,
+	}
+
+	var events []apartment.ApartmentEvent
+	events = append(events, *createEvent)
+	err = a.repoEvent.Add(events)
+	if err != nil {
+		log.Error().Err(err).Msg("CreateApartmentV1 - adding to apartment_events db failed")
 
 		return nil, status.Error(codes.Internal, err.Error())
 	}
