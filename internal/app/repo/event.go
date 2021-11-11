@@ -79,19 +79,18 @@ func (e eventRepo) Add(events []apartment.ApartmentEvent) error {
 
 	query = query.Suffix("RETURNING id").RunWith(e.db)
 
-	rows, err := query.QueryContext(context.Background())
+	s, args, err := query.ToSql()
 	if err != nil {
 		return err
 	}
 
 	var id uint64
-	if rows.Next() {
-		err = rows.Scan(&id)
+	err = e.db.Get(&id, s, args...)
+	if err != nil {
+		return err
+	}
 
-		if err != nil {
-			return err
-		}
-
+	if id != 0 {
 		return nil
 	} else {
 		return sql.ErrNoRows

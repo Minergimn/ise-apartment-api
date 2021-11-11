@@ -34,9 +34,9 @@ func (a *apartmentAPI) CreateApartmentV1(
 	apt.ID = id
 	createEvent := &apartment.ApartmentEvent{
 		ApartmentId: id,
-		Type: apartment.Created,
-		Status: apartment.Deferred,
-		Entity: apt,
+		Type:        apartment.Created,
+		Status:      apartment.Deferred,
+		Entity:      apt,
 	}
 
 	var events []apartment.ApartmentEvent

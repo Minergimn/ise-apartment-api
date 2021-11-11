@@ -18,7 +18,7 @@ var (
 
 type apartmentAPI struct {
 	pb.UnimplementedIseApartmentApiServiceServer
-	repo repo.Repo
+	repo      repo.Repo
 	repoEvent event.EventRepo
 }
 

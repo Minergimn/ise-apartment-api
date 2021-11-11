@@ -85,19 +85,16 @@ func (r *repo) CreateApartment(ctx context.Context, apartment *model.Apartment) 
 	query := sq.Insert("apartments").PlaceholderFormat(sq.Dollar).Columns(
 		"object", "owner", "status").Values(apartment.Object, apartment.Owner, 0).Suffix("RETURNING id").RunWith(r.db)
 
-	rows, err := query.QueryContext(ctx)
+	s, args, err := query.ToSql()
 	if err != nil {
 		return 0, err
 	}
-
 	var id uint64
-	if rows.Next() {
-		err = rows.Scan(&id)
-
-		if err != nil {
-			return 0, err
-		}
-
+	err = r.db.GetContext(ctx, &id, s, args...)
+	if err != nil {
+		return 0, err
+	}
+	if id != 0 {
 		return id, nil
 	} else {
 		return 0, sql.ErrNoRows
