@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (o *apartmentAPI) RemoveApartmentV1(
+func (a *apartmentAPI) RemoveApartmentV1(
 	ctx context.Context,
 	req *ise_apartment_api.RemoveApartmentV1Request,
 ) (*ise_apartment_api.RemoveApartmentV1Response, error) {
@@ -21,7 +21,23 @@ func (o *apartmentAPI) RemoveApartmentV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	log.Debug().Str("RemoveApartmentV1 input", req.String()).Msg("Just a log instead of an implementation")
+	found, err := a.repo.DeleteApartment(ctx, req.ApartmentId)
+	if err != nil {
+		log.Error().Err(err).Msg("RemoveApartmentV1 - failed")
 
-	return &ise_apartment_api.RemoveApartmentV1Response{}, nil
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	if found == false {
+		log.Debug().Uint64("apartmentId", req.ApartmentId).Msg("apartment not found")
+		totalApartmentNotFound.Inc()
+
+		return nil, status.Error(codes.NotFound, "apartment not found")
+	}
+
+	log.Debug().Msg("RemoveApartmentV1 - success")
+
+	return &ise_apartment_api.RemoveApartmentV1Response{
+		Found: true,
+	}, nil
 }

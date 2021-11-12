@@ -25,6 +25,7 @@ import (
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 
 	"github.com/ozonmp/ise-apartment-api/internal/api"
+	event "github.com/ozonmp/ise-apartment-api/internal/app/repo"
 	"github.com/ozonmp/ise-apartment-api/internal/config"
 	"github.com/ozonmp/ise-apartment-api/internal/repo"
 	pb "github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
@@ -108,8 +109,9 @@ func (s *GrpcServer) Start(cfg *config.Config) error {
 	)
 
 	r := repo.NewRepo(s.db, s.batchSize)
+	e := event.NewEventRepo(s.db, s.batchSize)
 
-	pb.RegisterIseApartmentApiServiceServer(grpcServer, api.NewApartmentAPI(r))
+	pb.RegisterIseApartmentApiServiceServer(grpcServer, api.NewApartmentAPI(r, e))
 	grpc_prometheus.EnableHandlingTimeHistogram()
 	grpc_prometheus.Register(grpcServer)
 

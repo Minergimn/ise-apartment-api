@@ -13,7 +13,8 @@ import (
 func Test_apartmentAPI_RemoveApartmentV1(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	repo := mocks.NewMockRepo(ctrl)
-	api := NewApartmentAPI(repo)
+	repoEvent := mocks.NewMockEventRepo(ctrl)
+	api := NewApartmentAPI(repo, repoEvent)
 	ctx := context.Background()
 
 	tests := []struct {

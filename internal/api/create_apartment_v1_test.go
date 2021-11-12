@@ -17,7 +17,8 @@ import (
 func Test_apartmentAPI_CreateApartmentV1(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	repo := mocks.NewMockRepo(ctrl)
-	api := NewApartmentAPI(repo)
+	repoEvent := mocks.NewMockEventRepo(ctrl)
+	api := NewApartmentAPI(repo, repoEvent)
 	ctx := context.Background()
 	wantResponse := &ise_apartment_api.CreateApartmentV1Response{}
 

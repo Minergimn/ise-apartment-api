@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-
 	"github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
 
 	"github.com/rs/zerolog/log"
@@ -10,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (o *apartmentAPI) ListApartmentsV1(
+func (a *apartmentAPI) ListApartmentsV1(
 	ctx context.Context,
 	req *ise_apartment_api.ListApartmentsV1Request,
 ) (*ise_apartment_api.ListApartmentsV1Response, error) {
@@ -21,9 +20,34 @@ func (o *apartmentAPI) ListApartmentsV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	log.Debug().Str("ListApartmentsV1 input", req.String()).Msg("Just a log instead of an implementation")
+	var (
+		ids           []uint64
+		limit, offset uint64
+		owner, object string
+	)
+
+	if req.Params != nil {
+		offset = req.Params.Offset
+		limit = req.Params.Limit
+		owner = req.Params.Owner
+		object = req.Params.Object
+		ids = req.Params.Ids
+	}
+
+	apartments, err := a.repo.ListApartments(ctx, offset, limit, owner, object, ids)
+	if err != nil {
+		log.Error().Err(err).Msg("ListApartmentsV1 - failed")
+
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	log.Debug().Msg("ListApartmentsV1 - success")
 
 	var items []*ise_apartment_api.Apartment
+
+	for _, apartment := range apartments {
+		items = append(items, a.mapApartmentFromDbToApi(&apartment))
+	}
 
 	return &ise_apartment_api.ListApartmentsV1Response{
 		Items: items,

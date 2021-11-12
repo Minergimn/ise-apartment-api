@@ -3,10 +3,18 @@ package apartment
 import "fmt"
 
 type Apartment struct {
-	ID     uint64
-	Object string
-	Owner  string
+	ID     uint64 `db:"id"`
+	Object string `db:"object"`
+	Owner  string `db:"owner"`
+	Status Status `db:"status"`
 }
+
+type Status uint8
+
+const (
+	Active Status = iota
+	Deleted
+)
 
 type EventType uint8
 
@@ -24,10 +32,14 @@ const (
 )
 
 type ApartmentEvent struct {
-	ID     uint64
-	Type   EventType
-	Status EventStatus
-	Entity *Apartment
+	ID          uint64      `db:"id"`
+	ApartmentId uint64      `db:"apartment_id"`
+	Type        EventType   `db:"type"`
+	Status      EventStatus `db:"status"`
+	Entity      *Apartment  `db:"payload"`
+	IsDeleted   bool        `db:"is_deleted"`
+	IsLocked    bool        `db:"is_locked"`
+	Updated     int64       `db:"updated"`
 }
 
 func (e *ApartmentEvent) String() string {

@@ -16,10 +16,11 @@ import (
 func Test_apartmentAPI_DescribeApartmentV1(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	repo := mocks.NewMockRepo(ctrl)
-	api := NewApartmentAPI(repo)
+	repoEvent := mocks.NewMockEventRepo(ctrl)
+	api := NewApartmentAPI(repo, repoEvent)
 	ctx := context.Background()
 
-	repo.EXPECT().DescribeApartment(gomock.Any(), gomock.Any()).DoAndReturn(func(ctx2 context.Context, id uint64) (*model.Apartment, error) {
+	repo.EXPECT().GetApartment(gomock.Any(), gomock.Any()).DoAndReturn(func(ctx2 context.Context, id uint64) (*model.Apartment, error) {
 		a := new(model.Apartment)
 		a.ID = id
 		a.Owner = fmt.Sprintf("%d", id)
