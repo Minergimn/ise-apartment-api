@@ -41,7 +41,7 @@ func (a *apartmentAPI) CreateApartmentV1(
 
 	var events []apartment.ApartmentEvent
 	events = append(events, *createEvent)
-	err = a.repoEvent.Add(events)
+	err = a.repoEvent.Add(ctx, events)
 	if err != nil {
 		log.Error().Err(err).Msg("CreateApartmentV1 - adding to apartment_events db failed")
 

@@ -2,7 +2,6 @@ package repo
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 
@@ -30,8 +29,12 @@ func NewRepo(db *sqlx.DB, batchSize uint) Repo {
 	return &repo{db: db, batchSize: batchSize}
 }
 
+func pgQb() sq.StatementBuilderType {
+	return sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+}
+
 func (r *repo) GetApartment(ctx context.Context, apartmentID uint64) (*model.Apartment, error) {
-	query := sq.Select("*").PlaceholderFormat(sq.Dollar).From("apartments").Where(sq.Eq{"id": apartmentID})
+	query := pgQb().Select("*").From("apartments").Where(sq.Eq{"id": apartmentID})
 
 	s, args, err := query.ToSql()
 	if err != nil {
@@ -48,8 +51,9 @@ func (r *repo) GetApartment(ctx context.Context, apartmentID uint64) (*model.Apa
 }
 
 func (r *repo) ListApartments(ctx context.Context, cursor uint64, limit uint64, owner string, object string, ids []uint64) ([]model.Apartment, error) {
-	query := sq.Select("*").PlaceholderFormat(sq.Dollar).From("apartments").OrderBy("id")
-	query = query.Where(sq.Eq{"status": 0})
+	query := pgQb().Select("*").From("apartments").
+		Where(sq.Eq{"status": 0}).
+		OrderBy("id")
 
 	if cursor > 0 {
 		query = query.Offset(cursor)
@@ -82,8 +86,11 @@ func (r *repo) ListApartments(ctx context.Context, cursor uint64, limit uint64, 
 }
 
 func (r *repo) CreateApartment(ctx context.Context, apartment *model.Apartment) (uint64, error) {
-	query := sq.Insert("apartments").PlaceholderFormat(sq.Dollar).Columns(
-		"object", "owner", "status").Values(apartment.Object, apartment.Owner, 0).Suffix("RETURNING id").RunWith(r.db)
+	query := pgQb().Insert("apartments").
+		Columns("object", "owner", "status").
+		Values(apartment.Object, apartment.Owner, 0).
+		Suffix("RETURNING id").
+		RunWith(r.db)
 
 	s, args, err := query.ToSql()
 	if err != nil {
@@ -94,15 +101,11 @@ func (r *repo) CreateApartment(ctx context.Context, apartment *model.Apartment) 
 	if err != nil {
 		return 0, err
 	}
-	if id != 0 {
-		return id, nil
-	} else {
-		return 0, sql.ErrNoRows
-	}
+
+	return id, nil
 }
 
 func (r *repo) DeleteApartment(ctx context.Context, apartmentID uint64) (bool, error) {
-
 	apartment, err := r.GetApartment(ctx, apartmentID)
 	if err != nil {
 		return false, err
@@ -116,7 +119,10 @@ func (r *repo) DeleteApartment(ctx context.Context, apartmentID uint64) (bool, e
 		return true, nil
 	}
 
-	query := sq.Update("apartments").PlaceholderFormat(sq.Dollar).Set("status", 1).Where(sq.Eq{"id": apartmentID})
+	query := pgQb().Update("apartments").
+		Set("status", 1).
+		Where(sq.Eq{"id": apartmentID})
+
 	s, args, err := query.ToSql()
 	if err != nil {
 		return false, err

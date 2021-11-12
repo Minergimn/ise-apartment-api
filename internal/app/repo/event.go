@@ -12,11 +12,11 @@ import (
 )
 
 type EventRepo interface {
-	Lock(n uint64) ([]apartment.ApartmentEvent, error)
-	Unlock(eventIDs []uint64) error
+	Lock(ctx context.Context, n uint64) ([]apartment.ApartmentEvent, error)
+	Unlock(ctx context.Context, eventIDs []uint64) error
 
-	Add(events []apartment.ApartmentEvent) error
-	Remove(eventIDs []uint64) error
+	Add(ctx context.Context, events []apartment.ApartmentEvent) error
+	Remove(ctx context.Context, eventIDs []uint64) error
 }
 
 type eventRepo struct {
@@ -29,19 +29,23 @@ func NewEventRepo(db *sqlx.DB, batchSize uint) EventRepo {
 	return &eventRepo{db: db, batchSize: batchSize}
 }
 
-func (e eventRepo) Lock(n uint64) ([]apartment.ApartmentEvent, error) {
-	query := sq.Select("*").PlaceholderFormat(sq.Dollar).From("apartments_events")
-	query = query.Where(sq.Eq{"is_locked": false})
-	query = query.Where(sq.Eq{"is_deleted": false})
-	query = query.Where(sq.Eq{"status": apartment.Deferred.String()})
-	query = query.OrderBy("id").Limit(n)
+func pgQb() sq.StatementBuilderType {
+	return sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
+}
+
+func (e eventRepo) Lock(ctx context.Context, n uint64) ([]apartment.ApartmentEvent, error) {
+	query := pgQb().Select("*").From("apartments_events").
+		Where(sq.Eq{"is_locked": false}).
+		Where(sq.Eq{"is_deleted": false}).
+		Where(sq.Eq{"status": apartment.Deferred.String()}).
+		OrderBy("id").Limit(n)
 
 	s, args, err := query.ToSql()
 	if err != nil {
 		return nil, err
 	}
 	var res []apartment.ApartmentEvent
-	err = e.db.SelectContext(context.Background(), &res, s, args...)
+	err = e.db.SelectContext(ctx, &res, s, args...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +55,7 @@ func (e eventRepo) Lock(n uint64) ([]apartment.ApartmentEvent, error) {
 		eventIDs = append(eventIDs, apt.ID)
 	}
 
-	err = e.setLocked(eventIDs, true)
+	err = e.setLocked(nil, eventIDs, true)
 	if err != nil {
 		return nil, err
 	}
@@ -59,12 +63,12 @@ func (e eventRepo) Lock(n uint64) ([]apartment.ApartmentEvent, error) {
 	return res, err
 }
 
-func (e eventRepo) Unlock(eventIDs []uint64) error {
-	return e.setLocked(eventIDs, false)
+func (e eventRepo) Unlock(ctx context.Context, eventIDs []uint64) error {
+	return e.setLocked(ctx, eventIDs, false)
 }
 
-func (e eventRepo) Add(events []apartment.ApartmentEvent) error {
-	query := sq.Insert("apartments_events").PlaceholderFormat(sq.Dollar).Columns(
+func (e eventRepo) Add(ctx context.Context, events []apartment.ApartmentEvent) error {
+	query := pgQb().Insert("apartments_events").Columns(
 		"apartment_id",
 		"type",
 		"status",
@@ -85,7 +89,7 @@ func (e eventRepo) Add(events []apartment.ApartmentEvent) error {
 	}
 
 	var id uint64
-	err = e.db.Get(&id, s, args...)
+	err = e.db.GetContext(ctx, &id, s, args...)
 	if err != nil {
 		return err
 	}
@@ -97,22 +101,28 @@ func (e eventRepo) Add(events []apartment.ApartmentEvent) error {
 	}
 }
 
-func (e eventRepo) Remove(eventIDs []uint64) error {
-	query := sq.Update("apartments_events").PlaceholderFormat(sq.Dollar).Set("is_deleted", 1).Where(sq.Eq{"id": eventIDs})
+func (e eventRepo) Remove(ctx context.Context, eventIDs []uint64) error {
+	query := pgQb().Update("apartments_events").
+		Set("is_deleted", 1).
+		Where(sq.Eq{"id": eventIDs})
+
 	s, args, err := query.ToSql()
 	if err != nil {
 		return err
 	}
-	_, err = e.db.ExecContext(context.Background(), s, args...)
+	_, err = e.db.ExecContext(ctx, s, args...)
 	return err
 }
 
-func (e eventRepo) setLocked(eventIDs []uint64, value bool) error {
-	query := sq.Update("apartments_events").PlaceholderFormat(sq.Dollar).Set("is_locked", value).Where(sq.Eq{"id": eventIDs})
+func (e eventRepo) setLocked(ctx context.Context, eventIDs []uint64, value bool) error {
+	query := pgQb().Update("apartments_events").
+		Set("is_locked", value).
+		Where(sq.Eq{"id": eventIDs})
+
 	s, args, err := query.ToSql()
 	if err != nil {
 		return err
 	}
-	_, err = e.db.ExecContext(context.Background(), s, args...)
+	_, err = e.db.ExecContext(ctx, s, args...)
 	return err
 }

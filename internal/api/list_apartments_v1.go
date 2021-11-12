@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-
 	"github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
 
 	"github.com/rs/zerolog/log"
@@ -21,11 +20,12 @@ func (a *apartmentAPI) ListApartmentsV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	offset := uint64(0)
-	limit := uint64(0)
-	owner := ""
-	object := ""
-	var ids []uint64
+	var (
+		ids           []uint64
+		limit, offset uint64
+		owner, object string
+	)
+
 	if req.Params != nil {
 		offset = req.Params.Offset
 		limit = req.Params.Limit
@@ -39,13 +39,6 @@ func (a *apartmentAPI) ListApartmentsV1(
 		log.Error().Err(err).Msg("ListApartmentsV1 - failed")
 
 		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	if apartments == nil {
-		log.Debug().Str("params", req.Params.String()).Msg("apartments not found")
-		totalApartmentNotFound.Inc()
-
-		return nil, status.Error(codes.NotFound, "apartments not found")
 	}
 
 	log.Debug().Msg("ListApartmentsV1 - success")
