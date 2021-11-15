@@ -12,27 +12,27 @@ service IseApartmentApiService {
   // DescribeApartmentV1 - Describe an apartment
   rpc DescribeApartmentV1(DescribeApartmentV1Request) returns (DescribeApartmentV1Response) {
     option (google.api.http) = {
-      get: "/v1/apartments/{apartment_id}"
+      get: "/api/v1/apartments/{apartment_id}"
     };
   }
   // CreateApartmentV1 - Create an apartment
   rpc CreateApartmentV1(CreateApartmentV1Request) returns (CreateApartmentV1Response) {
     option (google.api.http) = {
-      post: "/v1/apartments/create"
+      post: "/api/v1/apartments/create"
       body: "value"
     };
   }
   // ListApartmentsV1 - List of apartments
   rpc ListApartmentsV1(ListApartmentsV1Request) returns (ListApartmentsV1Response) {
     option (google.api.http) = {
-      post: "/v1/apartments/list"
+      post: "/api/v1/apartments/list"
       body: "params"
     };
   }
   // RemoveApartmentV1 - Remove an apartment
   rpc RemoveApartmentV1(RemoveApartmentV1Request) returns (RemoveApartmentV1Response) {
     option (google.api.http) = {
-      delete: "/v1/apartments/{apartment_id}"
+      delete: "/api/v1/apartments/{apartment_id}"
     };
   }
 }

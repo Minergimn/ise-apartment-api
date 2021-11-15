@@ -215,7 +215,7 @@ func RegisterIseApartmentApiServiceHandlerServer(ctx context.Context, mux *runti
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/DescribeApartmentV1", runtime.WithHTTPPathPattern("/v1/apartments/{apartment_id}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/DescribeApartmentV1", runtime.WithHTTPPathPattern("/api/v1/apartments/{apartment_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -238,7 +238,7 @@ func RegisterIseApartmentApiServiceHandlerServer(ctx context.Context, mux *runti
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/CreateApartmentV1", runtime.WithHTTPPathPattern("/v1/apartments/create"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/CreateApartmentV1", runtime.WithHTTPPathPattern("/api/v1/apartments/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -261,7 +261,7 @@ func RegisterIseApartmentApiServiceHandlerServer(ctx context.Context, mux *runti
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/ListApartmentsV1", runtime.WithHTTPPathPattern("/v1/apartments/list"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/ListApartmentsV1", runtime.WithHTTPPathPattern("/api/v1/apartments/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -284,7 +284,7 @@ func RegisterIseApartmentApiServiceHandlerServer(ctx context.Context, mux *runti
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/RemoveApartmentV1", runtime.WithHTTPPathPattern("/v1/apartments/{apartment_id}"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/RemoveApartmentV1", runtime.WithHTTPPathPattern("/api/v1/apartments/{apartment_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -346,7 +346,7 @@ func RegisterIseApartmentApiServiceHandlerClient(ctx context.Context, mux *runti
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/DescribeApartmentV1", runtime.WithHTTPPathPattern("/v1/apartments/{apartment_id}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/DescribeApartmentV1", runtime.WithHTTPPathPattern("/api/v1/apartments/{apartment_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -366,7 +366,7 @@ func RegisterIseApartmentApiServiceHandlerClient(ctx context.Context, mux *runti
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/CreateApartmentV1", runtime.WithHTTPPathPattern("/v1/apartments/create"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/CreateApartmentV1", runtime.WithHTTPPathPattern("/api/v1/apartments/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -386,7 +386,7 @@ func RegisterIseApartmentApiServiceHandlerClient(ctx context.Context, mux *runti
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/ListApartmentsV1", runtime.WithHTTPPathPattern("/v1/apartments/list"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/ListApartmentsV1", runtime.WithHTTPPathPattern("/api/v1/apartments/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -406,7 +406,7 @@ func RegisterIseApartmentApiServiceHandlerClient(ctx context.Context, mux *runti
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/RemoveApartmentV1", runtime.WithHTTPPathPattern("/v1/apartments/{apartment_id}"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/ozonmp.ise_apartment_api.v1.IseApartmentApiService/RemoveApartmentV1", runtime.WithHTTPPathPattern("/api/v1/apartments/{apartment_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -426,13 +426,13 @@ func RegisterIseApartmentApiServiceHandlerClient(ctx context.Context, mux *runti
 }
 
 var (
-	pattern_IseApartmentApiService_DescribeApartmentV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "apartments", "apartment_id"}, ""))
+	pattern_IseApartmentApiService_DescribeApartmentV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "apartments", "apartment_id"}, ""))
 
-	pattern_IseApartmentApiService_CreateApartmentV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "apartments", "create"}, ""))
+	pattern_IseApartmentApiService_CreateApartmentV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "apartments", "create"}, ""))
 
-	pattern_IseApartmentApiService_ListApartmentsV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "apartments", "list"}, ""))
+	pattern_IseApartmentApiService_ListApartmentsV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "v1", "apartments", "list"}, ""))
 
-	pattern_IseApartmentApiService_RemoveApartmentV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "apartments", "apartment_id"}, ""))
+	pattern_IseApartmentApiService_RemoveApartmentV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "apartments", "apartment_id"}, ""))
 )
 
 var (

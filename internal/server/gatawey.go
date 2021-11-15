@@ -24,7 +24,7 @@ var (
 	})
 )
 
-func createGatewayServer(grpcAddr, gatewayAddr string, allowedOrigins []string) *http.Server {
+func createGatewayServer(grpcAddr, gatewayAddr string) *http.Server {
 	// Create a client connection to the gRPC Server we just started.
 	// This is where the gRPC-Gateway proxies the requests.
 	conn, err := grpc.DialContext(
@@ -48,7 +48,7 @@ func createGatewayServer(grpcAddr, gatewayAddr string, allowedOrigins []string) 
 
 	gatewayServer := &http.Server{
 		Addr:    gatewayAddr,
-		Handler: cors(tracingWrapper(mux), allowedOrigins),
+		Handler: tracingWrapper(mux),
 	}
 
 	return gatewayServer
@@ -70,29 +70,6 @@ func tracingWrapper(h http.Handler) http.Handler {
 			)
 			r = r.WithContext(opentracing.ContextWithSpan(r.Context(), serverSpan))
 			defer serverSpan.Finish()
-		}
-		h.ServeHTTP(w, r)
-	})
-}
-
-func cors(h http.Handler, allowedOrigins []string) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		providedOrigin := r.Header.Get("Origin")
-		matches := false
-		for _, allowedOrigin := range allowedOrigins {
-			if providedOrigin == allowedOrigin {
-				matches = true
-				break
-			}
-		}
-
-		if matches {
-			w.Header().Set("Access-Control-Allow-Origin", providedOrigin)
-			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")
-			w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization, ResponseType")
-		}
-		if r.Method == "OPTIONS" {
-			return
 		}
 		h.ServeHTTP(w, r)
 	})

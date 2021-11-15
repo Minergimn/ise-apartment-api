@@ -43,7 +43,6 @@ type Grpc struct {
 type Rest struct {
 	Port               int      `yaml:"port"`
 	Host               string   `yaml:"host"`
-	AllowedCORSOrigins []string `yaml:"allowedCorsOrigins"`
 }
 
 // Swagger - contains parameters for swagger port

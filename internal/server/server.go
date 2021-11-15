@@ -54,7 +54,7 @@ func (s *GrpcServer) Start(cfg *config.Config) error {
 	grpcAddr := fmt.Sprintf("%s:%v", cfg.Grpc.Host, cfg.Grpc.Port)
 	metricsAddr := fmt.Sprintf("%s:%v", cfg.Metrics.Host, cfg.Metrics.Port)
 
-	gatewayServer := createGatewayServer(grpcAddr, gatewayAddr, cfg.Rest.AllowedCORSOrigins)
+	gatewayServer := createGatewayServer(grpcAddr, gatewayAddr)
 
 	go func() {
 		log.Info().Msgf("Gateway server is running on %s", gatewayAddr)
