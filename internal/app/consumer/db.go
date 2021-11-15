@@ -1,6 +1,7 @@
 package consumer
 
 import (
+	"context"
 	"sync"
 	"time"
 
@@ -9,8 +10,8 @@ import (
 )
 
 type Consumer interface {
-	Start()
-	Close()
+	Start(ctx context.Context)
+	Close(ctx context.Context)
 }
 
 type consumer struct {
@@ -55,7 +56,7 @@ func NewDbConsumer(
 	}
 }
 
-func (c *consumer) Start() {
+func (c *consumer) Start(ctx context.Context) {
 	for i := uint64(0); i < c.n; i++ {
 		c.wg.Add(1)
 
@@ -65,7 +66,7 @@ func (c *consumer) Start() {
 			for {
 				select {
 				case <-ticker.C:
-					events, err := c.repo.Lock(c.batchSize)
+					events, err := c.repo.Lock(ctx, c.batchSize)
 					if err != nil {
 						continue
 					}
@@ -80,7 +81,7 @@ func (c *consumer) Start() {
 	}
 }
 
-func (c *consumer) Close() {
+func (c *consumer) Close(ctx context.Context) {
 	close(c.done)
 	c.wg.Wait()
 }

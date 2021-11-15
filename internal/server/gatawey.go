@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+	"github.com/ozonmp/ise-apartment-api/internal/logger"
 	"net/http"
 
 	pb "github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
@@ -13,7 +14,6 @@ import (
 	"github.com/opentracing/opentracing-go/ext"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 )
 
@@ -25,10 +25,12 @@ var (
 )
 
 func createGatewayServer(grpcAddr, gatewayAddr string) *http.Server {
+	ctx := context.Background()
+
 	// Create a client connection to the gRPC Server we just started.
 	// This is where the gRPC-Gateway proxies the requests.
 	conn, err := grpc.DialContext(
-		context.Background(),
+		ctx,
 		grpcAddr,
 		grpc.WithUnaryInterceptor(
 			grpc_opentracing.UnaryClientInterceptor(
@@ -38,12 +40,12 @@ func createGatewayServer(grpcAddr, gatewayAddr string) *http.Server {
 		grpc.WithInsecure(),
 	)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Failed to dial server")
+		logger.FatalKV(ctx, "Failed to dial server", "err", err)
 	}
 
 	mux := runtime.NewServeMux()
 	if err := pb.RegisterIseApartmentApiServiceHandler(context.Background(), mux, conn); err != nil {
-		log.Fatal().Err(err).Msg("Failed registration handler")
+		logger.FatalKV(ctx, "Failed registration handler", "err", err)
 	}
 
 	gatewayServer := &http.Server{

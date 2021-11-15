@@ -2,11 +2,11 @@ package api
 
 import (
 	"context"
+	ise_apartment_api "github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
+
+	"github.com/ozonmp/ise-apartment-api/internal/logger"
 	apartment "github.com/ozonmp/ise-apartment-api/internal/model"
 
-	"github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
-
-	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -17,7 +17,7 @@ func (a *apartmentAPI) CreateApartmentV1(
 ) (*ise_apartment_api.CreateApartmentV1Response, error) {
 
 	if err := req.Validate(); err != nil {
-		log.Error().Err(err).Msg("CreateApartmentV1 - invalid argument")
+		logger.ErrorKV(ctx, "CreateApartmentV1 - invalid argument")
 
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
@@ -26,7 +26,7 @@ func (a *apartmentAPI) CreateApartmentV1(
 
 	id, err := a.repo.CreateApartment(ctx, apt)
 	if err != nil {
-		log.Error().Err(err).Msg("CreateApartmentV1 - adding to apartment db failed")
+		logger.ErrorKV(ctx, "CreateApartmentV1 - adding to apartment db failed")
 
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -43,12 +43,12 @@ func (a *apartmentAPI) CreateApartmentV1(
 	events = append(events, *createEvent)
 	err = a.repoEvent.Add(ctx, events)
 	if err != nil {
-		log.Error().Err(err).Msg("CreateApartmentV1 - adding to apartment_events db failed")
+		logger.ErrorKV(ctx, "CreateApartmentV1 - adding to apartment_events db failed")
 
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	log.Debug().Msg("CreateApartmentV1 - success")
+	logger.DebugKV(ctx, "CreateApartmentV1 - success")
 
 	return &ise_apartment_api.CreateApartmentV1Response{
 		ApartmentId: id,

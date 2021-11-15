@@ -41,8 +41,8 @@ type Grpc struct {
 
 // Rest - contains parameter rest json connection.
 type Rest struct {
-	Port               int      `yaml:"port"`
-	Host               string   `yaml:"host"`
+	Port int    `yaml:"port"`
+	Host string `yaml:"host"`
 }
 
 // Swagger - contains parameters for swagger port
@@ -52,6 +52,10 @@ type Swagger struct {
 	Filepath string `yaml:"filepath"`
 }
 
+type Telemetry struct {
+	GraylogPath string `yaml:"graylogPath"`
+}
+
 // Project - contains all parameters project information.
 type Project struct {
 	Debug       bool   `yaml:"debug"`
@@ -59,6 +63,7 @@ type Project struct {
 	Environment string `yaml:"environment"`
 	Version     string
 	CommitHash  string
+	ServiceName string `yaml:"serviceName"`
 }
 
 // Metrics - contains all parameters metrics information.
@@ -70,7 +75,6 @@ type Metrics struct {
 
 // Jaeger - contains all parameters metrics information.
 type Jaeger struct {
-	Service string `yaml:"service"`
 	Host    string `yaml:"host"`
 	Port    string `yaml:"port"`
 }
@@ -94,15 +98,16 @@ type Status struct {
 
 // Config - contains all configuration parameters in config package.
 type Config struct {
-	Project  Project  `yaml:"project"`
-	Grpc     Grpc     `yaml:"grpc"`
-	Rest     Rest     `yaml:"rest"`
-	Database Database `yaml:"database"`
-	Metrics  Metrics  `yaml:"metrics"`
-	Jaeger   Jaeger   `yaml:"jaeger"`
-	Kafka    Kafka    `yaml:"kafka"`
-	Status   Status   `yaml:"status"`
-	Swagger  Swagger  `yaml:"swagger"`
+	Project   Project   `yaml:"project"`
+	Grpc      Grpc      `yaml:"grpc"`
+	Rest      Rest      `yaml:"rest"`
+	Database  Database  `yaml:"database"`
+	Metrics   Metrics   `yaml:"metrics"`
+	Jaeger    Jaeger    `yaml:"jaeger"`
+	Kafka     Kafka     `yaml:"kafka"`
+	Status    Status    `yaml:"status"`
+	Swagger   Swagger   `yaml:"swagger"`
+	Telemetry Telemetry `yaml:"telemetry"`
 }
 
 // ReadConfigYML - read configurations from file and init instance Config.

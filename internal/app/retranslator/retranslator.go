@@ -1,20 +1,21 @@
 package retranslator
 
 import (
+	"context"
+	apartment "github.com/ozonmp/ise-apartment-api/internal/model"
 	"time"
 
 	"github.com/ozonmp/ise-apartment-api/internal/app/consumer"
 	"github.com/ozonmp/ise-apartment-api/internal/app/producer"
 	"github.com/ozonmp/ise-apartment-api/internal/app/repo"
 	"github.com/ozonmp/ise-apartment-api/internal/app/sender"
-	"github.com/ozonmp/ise-apartment-api/internal/model"
 
 	"github.com/gammazero/workerpool"
 )
 
 type Retranslator interface {
-	Start()
-	Close()
+	Start(ctx context.Context)
+	Close(ctx context.Context)
 }
 
 type Config struct {
@@ -63,13 +64,13 @@ func NewRetranslator(cfg Config) Retranslator {
 	}
 }
 
-func (r *retranslator) Start() {
-	r.producer.Start()
-	r.consumer.Start()
+func (r *retranslator) Start(ctx context.Context) {
+	r.producer.Start(ctx)
+	r.consumer.Start(ctx)
 }
 
-func (r *retranslator) Close() {
-	r.consumer.Close()
-	r.producer.Close()
+func (r *retranslator) Close(ctx context.Context) {
+	r.consumer.Close(ctx)
+	r.producer.Close(ctx)
 	r.workerPool.StopWait()
 }

@@ -2,8 +2,9 @@ package repo
 
 import (
 	"context"
-	"database/sql"
 	"time"
+
+	"github.com/ozonmp/ise-apartment-api/internal/logger"
 
 	apartment "github.com/ozonmp/ise-apartment-api/internal/model"
 
@@ -44,6 +45,8 @@ func (e eventRepo) Lock(ctx context.Context, n uint64) ([]apartment.ApartmentEve
 	if err != nil {
 		return nil, err
 	}
+
+	logger.InfoKV(ctx, "Getting events from db")
 	var res []apartment.ApartmentEvent
 	err = e.db.SelectContext(ctx, &res, s, args...)
 	if err != nil {
@@ -88,17 +91,14 @@ func (e eventRepo) Add(ctx context.Context, events []apartment.ApartmentEvent) e
 		return err
 	}
 
-	var id uint64
-	err = e.db.GetContext(ctx, &id, s, args...)
+	logger.InfoKV(ctx, "Add events to db")
+	var ids []uint64
+	err = e.db.GetContext(ctx, &ids, s, args...)
 	if err != nil {
 		return err
 	}
 
-	if id != 0 {
-		return nil
-	} else {
-		return sql.ErrNoRows
-	}
+	return nil
 }
 
 func (e eventRepo) Remove(ctx context.Context, eventIDs []uint64) error {
@@ -110,6 +110,8 @@ func (e eventRepo) Remove(ctx context.Context, eventIDs []uint64) error {
 	if err != nil {
 		return err
 	}
+
+	logger.InfoKV(ctx, "Set events removed", "ids", eventIDs)
 	_, err = e.db.ExecContext(ctx, s, args...)
 	return err
 }
@@ -123,6 +125,8 @@ func (e eventRepo) setLocked(ctx context.Context, eventIDs []uint64, value bool)
 	if err != nil {
 		return err
 	}
+
+	logger.InfoKV(ctx, "Set events locked", "ids", eventIDs)
 	_, err = e.db.ExecContext(ctx, s, args...)
 	return err
 }

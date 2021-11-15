@@ -2,9 +2,10 @@ package api
 
 import (
 	"context"
-	"github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
+	ise_apartment_api "github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
 
-	"github.com/rs/zerolog/log"
+	"github.com/ozonmp/ise-apartment-api/internal/logger"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -15,7 +16,7 @@ func (a *apartmentAPI) ListApartmentsV1(
 ) (*ise_apartment_api.ListApartmentsV1Response, error) {
 
 	if err := req.Validate(); err != nil {
-		log.Error().Err(err).Msg("ListApartmentsV1 - invalid argument")
+		logger.ErrorKV(ctx, "ListApartmentsV1 - invalid argument")
 
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
@@ -36,12 +37,12 @@ func (a *apartmentAPI) ListApartmentsV1(
 
 	apartments, err := a.repo.ListApartments(ctx, offset, limit, owner, object, ids)
 	if err != nil {
-		log.Error().Err(err).Msg("ListApartmentsV1 - failed")
+		logger.ErrorKV(ctx, "ListApartmentsV1 - failed")
 
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	log.Debug().Msg("ListApartmentsV1 - success")
+	logger.DebugKV(ctx, "ListApartmentsV1 - success")
 
 	var items []*ise_apartment_api.Apartment
 
