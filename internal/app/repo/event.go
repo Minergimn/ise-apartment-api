@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"github.com/opentracing/opentracing-go"
 	"time"
 
 	"github.com/ozonmp/ise-apartment-api/internal/logger"
@@ -35,6 +36,9 @@ func pgQb() sq.StatementBuilderType {
 }
 
 func (e eventRepo) Lock(ctx context.Context, n uint64) ([]apartment.ApartmentEvent, error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "eventRepo.Lock")
+	defer span.Finish()
+
 	query := pgQb().Select("*").From("apartments_events").
 		Where(sq.Eq{"is_locked": false}).
 		Where(sq.Eq{"is_deleted": false}).
@@ -67,10 +71,16 @@ func (e eventRepo) Lock(ctx context.Context, n uint64) ([]apartment.ApartmentEve
 }
 
 func (e eventRepo) Unlock(ctx context.Context, eventIDs []uint64) error {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "eventRepo.Unlock")
+	defer span.Finish()
+
 	return e.setLocked(ctx, eventIDs, false)
 }
 
 func (e eventRepo) Add(ctx context.Context, events []apartment.ApartmentEvent) error {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "eventRepo.Add")
+	defer span.Finish()
+
 	query := pgQb().Insert("apartments_events").Columns(
 		"apartment_id",
 		"type",
@@ -102,6 +112,9 @@ func (e eventRepo) Add(ctx context.Context, events []apartment.ApartmentEvent) e
 }
 
 func (e eventRepo) Remove(ctx context.Context, eventIDs []uint64) error {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "eventRepo.Remove")
+	defer span.Finish()
+
 	query := pgQb().Update("apartments_events").
 		Set("is_deleted", 1).
 		Where(sq.Eq{"id": eventIDs})
