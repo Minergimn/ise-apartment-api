@@ -1,6 +1,6 @@
 project:
   name: Ozon Code Platform Apartment API
-  debug: true
+  debug: false
   environment: development
   serviceName: "ise-apartment-api"
 

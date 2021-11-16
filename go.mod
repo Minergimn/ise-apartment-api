@@ -17,7 +17,6 @@ require (
 	//github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api v0.0.0
 	github.com/pressly/goose/v3 v3.1.0
 	github.com/prometheus/client_golang v1.11.0
-	github.com/rs/zerolog v1.24.0
 	github.com/uber/jaeger-client-go v2.29.1+incompatible
 	google.golang.org/grpc v1.41.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b

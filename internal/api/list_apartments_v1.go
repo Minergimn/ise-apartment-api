@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	ise_apartment_api "github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
+	"google.golang.org/grpc/metadata"
 
 	"github.com/ozonmp/ise-apartment-api/internal/logger"
 
@@ -14,6 +15,20 @@ func (a *apartmentAPI) ListApartmentsV1(
 	ctx context.Context,
 	req *ise_apartment_api.ListApartmentsV1Request,
 ) (*ise_apartment_api.ListApartmentsV1Response, error) {
+
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok {
+		levels := md.Get("log-level")
+		logger.InfoKV(ctx, "got log level", "levels", levels)
+		if len(levels) > 0 {
+			if parsedLevel, ok := parseLevel(levels[0]); ok {
+				newLogger := logger.CloneWithLevel(ctx, parsedLevel)
+				ctx = logger.AttachLogger(ctx, newLogger)
+			}
+		}
+	}
+
+	logger.DebugKV(ctx, "ListApartmentsV1 - started")
 
 	if err := req.Validate(); err != nil {
 		logger.ErrorKV(ctx, "ListApartmentsV1 - invalid argument")

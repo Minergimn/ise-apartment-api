@@ -3,6 +3,7 @@ package logger
 import (
 	"context"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	"log"
 )
 
@@ -42,6 +43,13 @@ func FatalKV(ctx context.Context, message string, kvs ...interface{}) {
 
 func AttachLogger(ctx context.Context, logger *zap.SugaredLogger) context.Context {
 	return context.WithValue(ctx, attachedLoggerKey, logger)
+}
+
+func CloneWithLevel(ctx context.Context, newLevel zapcore.Level) *zap.SugaredLogger {
+	return fromContext(ctx).
+		Desugar().
+		WithOptions(WithLevel(newLevel)).
+		Sugar()
 }
 
 func SetLogger(newLogger *zap.SugaredLogger) {
