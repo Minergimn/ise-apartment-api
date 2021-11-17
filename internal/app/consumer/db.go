@@ -26,7 +26,7 @@ type consumer struct {
 	batchSize uint64
 	timeout   time.Duration
 
-	done chan bool
+	cancelFunc context.CancelFunc
 	wg   *sync.WaitGroup
 }
 
@@ -46,7 +46,6 @@ func NewDbConsumer(
 	events chan<- apartment.ApartmentEvent) Consumer {
 
 	wg := &sync.WaitGroup{}
-	done := make(chan bool)
 
 	return &consumer{
 		n:         n,
@@ -55,11 +54,13 @@ func NewDbConsumer(
 		repo:      repo,
 		events:    events,
 		wg:        wg,
-		done:      done,
 	}
 }
 
 func (c *consumer) Start(ctx context.Context) {
+	ctx, cancel := context.WithCancel(ctx)
+	c.cancelFunc = cancel
+
 	for i := uint64(0); i < c.n; i++ {
 		c.wg.Add(1)
 
@@ -78,7 +79,7 @@ func (c *consumer) Start(ctx context.Context) {
 						metrics.AddCurrentRetranslatorEventsCount(1)
 						logger.DebugKV(ctx, fmt.Sprintf("Add event %d to retraslator from db", event.ID))
 					}
-				case <-c.done:
+				case <-ctx.Done():
 					return
 				}
 			}
@@ -87,6 +88,6 @@ func (c *consumer) Start(ctx context.Context) {
 }
 
 func (c *consumer) Close(ctx context.Context) {
-	close(c.done)
+	c.cancelFunc()
 	c.wg.Wait()
 }

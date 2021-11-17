@@ -33,8 +33,8 @@ type producer struct {
 
 	workerPool *workerpool.WorkerPool
 
+	cancelFunc context.CancelFunc
 	wg   *sync.WaitGroup
-	done chan bool
 }
 
 func NewKafkaProducer(
@@ -46,7 +46,6 @@ func NewKafkaProducer(
 ) Producer {
 
 	wg := &sync.WaitGroup{}
-	done := make(chan bool)
 
 	return &producer{
 		n:          n,
@@ -55,11 +54,13 @@ func NewKafkaProducer(
 		repo:       repo,
 		workerPool: workerPool,
 		wg:         wg,
-		done:       done,
 	}
 }
 
 func (p *producer) Start(ctx context.Context) {
+	ctx, cancel := context.WithCancel(ctx)
+	p.cancelFunc = cancel
+
 	for i := uint64(0); i < p.n; i++ {
 		p.wg.Add(1)
 		go func() {
@@ -86,7 +87,7 @@ func (p *producer) Start(ctx context.Context) {
 							metrics.SubCurrentRetranslatorEventsCount(1)
 						})
 					}
-				case <-p.done:
+				case <-ctx.Done():
 					return
 				}
 			}
@@ -95,6 +96,6 @@ func (p *producer) Start(ctx context.Context) {
 }
 
 func (p *producer) Close(ctx context.Context) {
-	close(p.done)
+	p.cancelFunc()
 	p.wg.Wait()
 }
