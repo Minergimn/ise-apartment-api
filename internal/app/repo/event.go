@@ -102,8 +102,7 @@ func (e eventRepo) Add(ctx context.Context, events []apartment.ApartmentEvent) e
 	}
 
 	logger.InfoKV(ctx, "Add events to db")
-	var ids []uint64
-	err = e.db.GetContext(ctx, &ids, s, args...)
+	_, err = e.db.ExecContext(ctx, s, args...)
 	if err != nil {
 		return err
 	}

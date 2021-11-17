@@ -2,7 +2,10 @@ package api
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"github.com/ozonmp/ise-apartment-api/internal/logger"
+	"github.com/ozonmp/ise-apartment-api/internal/metrics"
 	"github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
 	"google.golang.org/grpc/metadata"
 
@@ -37,16 +40,16 @@ func (a *apartmentAPI) DescribeApartmentV1(
 
 	apartment, err := a.repo.GetApartment(ctx, req.ApartmentId)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			logger.DebugKV(ctx, "apartment not found", "apartmentId", req.ApartmentId)
+			metrics.IncTotalApartmentNotFound()
+
+			return nil, status.Error(codes.NotFound, "apartment not found")
+		}
+
 		logger.ErrorKV(ctx, "DescribeApartmentV1 - failed")
 
 		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	if apartment == nil {
-		logger.DebugKV(ctx, "apartment not found", "apartmentId", req.ApartmentId)
-		totalApartmentNotFound.Inc()
-
-		return nil, status.Error(codes.NotFound, "apartment not found")
 	}
 
 	logger.DebugKV(ctx, "DescribeApartmentV1 - success")

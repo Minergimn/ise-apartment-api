@@ -2,7 +2,10 @@ package api
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"github.com/ozonmp/ise-apartment-api/internal/logger"
+	"github.com/ozonmp/ise-apartment-api/internal/metrics"
 	"google.golang.org/grpc/metadata"
 
 	"github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
@@ -38,21 +41,22 @@ func (a *apartmentAPI) RemoveApartmentV1(
 
 	found, err := a.repo.DeleteApartment(ctx, req.ApartmentId)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			logger.DebugKV(ctx, "apartment not found", "apartmentId", req.ApartmentId)
+			metrics.IncTotalApartmentNotFound()
+
+			return nil, status.Error(codes.NotFound, "apartment not found")
+		}
+
 		logger.ErrorKV(ctx, "RemoveApartmentV1 - failed")
 
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	if found == false {
-		logger.DebugKV(ctx, "apartment not found", "apartmentId", req.ApartmentId)
-		totalApartmentNotFound.Inc()
-
-		return nil, status.Error(codes.NotFound, "apartment not found")
-	}
-
 	logger.DebugKV(ctx, "RemoveApartmentV1 - success")
+	metrics.IncTotalApartmentCUDEvents(metrics.Deleted)
 
 	return &ise_apartment_api.RemoveApartmentV1Response{
-		Found: true,
+		Found: found,
 	}, nil
 }

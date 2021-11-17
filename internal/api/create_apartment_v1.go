@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"github.com/ozonmp/ise-apartment-api/internal/metrics"
 	ise_apartment_api "github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
 	"google.golang.org/grpc/metadata"
 
@@ -64,6 +65,8 @@ func (a *apartmentAPI) CreateApartmentV1(
 	}
 
 	logger.DebugKV(ctx, "CreateApartmentV1 - success")
+
+	metrics.IncTotalApartmentCUDEvents(metrics.Created)
 
 	return &ise_apartment_api.CreateApartmentV1Response{
 		ApartmentId: id,

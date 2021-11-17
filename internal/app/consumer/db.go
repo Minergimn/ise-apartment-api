@@ -2,6 +2,9 @@ package consumer
 
 import (
 	"context"
+	"fmt"
+	"github.com/ozonmp/ise-apartment-api/internal/logger"
+	"github.com/ozonmp/ise-apartment-api/internal/metrics"
 	"sync"
 	"time"
 
@@ -72,6 +75,8 @@ func (c *consumer) Start(ctx context.Context) {
 					}
 					for _, event := range events {
 						c.events <- event
+						metrics.AddCurrentRetranslatorEventsCount(1)
+						logger.DebugKV(ctx, fmt.Sprintf("Add event %d to retraslator from db", event.ID))
 					}
 				case <-c.done:
 					return

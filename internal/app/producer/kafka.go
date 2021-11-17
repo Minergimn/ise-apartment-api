@@ -3,9 +3,11 @@ package producer
 import (
 	"context"
 	"fmt"
-	apartment "github.com/ozonmp/ise-apartment-api/internal/model"
 	"sync"
 	"time"
+
+	"github.com/ozonmp/ise-apartment-api/internal/metrics"
+	apartment "github.com/ozonmp/ise-apartment-api/internal/model"
 
 	"github.com/ozonmp/ise-apartment-api/internal/logger"
 
@@ -80,6 +82,8 @@ func (p *producer) Start(ctx context.Context) {
 							if err = p.repo.Remove(ctx, []uint64{event.ID}); err != nil {
 								logger.DebugKV(ctx, fmt.Sprintf("Removing event %s has error: %t", event.String(), err))
 							}
+
+							metrics.SubCurrentRetranslatorEventsCount(1)
 						})
 					}
 				case <-p.done:
