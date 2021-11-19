@@ -42,7 +42,7 @@ const (
 	Processed
 )
 
-//ApartmentEvent comment for linter
+//Event comment for linter
 type Event struct {
 	ID          uint64      `db:"id"`
 	ApartmentID uint64      `db:"apartment_id"`
