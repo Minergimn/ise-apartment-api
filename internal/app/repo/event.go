@@ -15,10 +15,10 @@ import (
 
 // EventRepo comment for linters
 type EventRepo interface {
-	Lock(ctx context.Context, n uint64) ([]apartment.ApartmentEvent, error)
+	Lock(ctx context.Context, n uint64) ([]apartment.Event, error)
 	Unlock(ctx context.Context, eventIDs []uint64) error
 
-	Add(ctx context.Context, events []apartment.ApartmentEvent) error
+	Add(ctx context.Context, events []apartment.Event) error
 	Remove(ctx context.Context, eventIDs []uint64) error
 }
 
@@ -36,7 +36,7 @@ func pgQb() sq.StatementBuilderType {
 	return sq.StatementBuilder.PlaceholderFormat(sq.Dollar)
 }
 
-func (e eventRepo) Lock(ctx context.Context, n uint64) ([]apartment.ApartmentEvent, error) {
+func (e eventRepo) Lock(ctx context.Context, n uint64) ([]apartment.Event, error) {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "eventRepo.Lock")
 	defer span.Finish()
 
@@ -52,7 +52,7 @@ func (e eventRepo) Lock(ctx context.Context, n uint64) ([]apartment.ApartmentEve
 	}
 
 	logger.InfoKV(ctx, "Getting events from db")
-	var res []apartment.ApartmentEvent
+	var res []apartment.Event
 	err = e.db.SelectContext(ctx, &res, s, args...)
 	if err != nil {
 		return nil, err
@@ -78,7 +78,7 @@ func (e eventRepo) Unlock(ctx context.Context, eventIDs []uint64) error {
 	return e.setLocked(ctx, eventIDs, false)
 }
 
-func (e eventRepo) Add(ctx context.Context, events []apartment.ApartmentEvent) error {
+func (e eventRepo) Add(ctx context.Context, events []apartment.Event) error {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "eventRepo.Add")
 	defer span.Finish()
 

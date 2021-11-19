@@ -43,7 +43,7 @@ const (
 )
 
 //ApartmentEvent comment for linter
-type ApartmentEvent struct {
+type Event struct {
 	ID          uint64      `db:"id"`
 	ApartmentID uint64      `db:"apartment_id"`
 	Type        EventType   `db:"type"`
@@ -54,7 +54,7 @@ type ApartmentEvent struct {
 	Updated     int64       `db:"updated"`
 }
 
-func (e *ApartmentEvent) String() string {
+func (e *Event) String() string {
 	return fmt.Sprintf("ApartmentEvent id: %d type: %s status: %s apartment id: %d", e.ID, e.Type, e.Status, e.Entity.ID)
 }
 

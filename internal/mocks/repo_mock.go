@@ -36,7 +36,7 @@ func (m *MockEventRepo) EXPECT() *MockEventRepoMockRecorder {
 }
 
 // Add mocks base method.
-func (m *MockEventRepo) Add(arg0 context.Context, arg1 []apartment.ApartmentEvent) error {
+func (m *MockEventRepo) Add(arg0 context.Context, arg1 []apartment.Event) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Add", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -50,10 +50,10 @@ func (mr *MockEventRepoMockRecorder) Add(arg0, arg1 interface{}) *gomock.Call {
 }
 
 // Lock mocks base method.
-func (m *MockEventRepo) Lock(arg0 context.Context, arg1 uint64) ([]apartment.ApartmentEvent, error) {
+func (m *MockEventRepo) Lock(arg0 context.Context, arg1 uint64) ([]apartment.Event, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Lock", arg0, arg1)
-	ret0, _ := ret[0].([]apartment.ApartmentEvent)
+	ret0, _ := ret[0].([]apartment.Event)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

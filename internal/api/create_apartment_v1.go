@@ -48,14 +48,14 @@ func (a *apartmentAPI) CreateApartmentV1(
 	}
 
 	apt.ID = id
-	createEvent := &apartment.ApartmentEvent{
+	createEvent := &apartment.Event{
 		ApartmentID: id,
 		Type:        apartment.Created,
 		Status:      apartment.Deferred,
 		Entity:      apt,
 	}
 
-	var events []apartment.ApartmentEvent
+	var events []apartment.Event
 	events = append(events, *createEvent)
 	err = a.repoEvent.Add(ctx, events)
 	if err != nil {

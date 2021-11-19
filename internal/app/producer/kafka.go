@@ -28,7 +28,7 @@ type producer struct {
 	timeout time.Duration //nolint
 
 	sender sender.EventSender
-	events <-chan apartment.ApartmentEvent
+	events <-chan apartment.Event
 
 	repo repo.EventRepo
 
@@ -42,7 +42,7 @@ type producer struct {
 func NewKafkaProducer(
 	n uint64,
 	sender sender.EventSender,
-	events <-chan apartment.ApartmentEvent,
+	events <-chan apartment.Event,
 	repo repo.EventRepo,
 	workerPool *workerpool.WorkerPool,
 ) Producer {

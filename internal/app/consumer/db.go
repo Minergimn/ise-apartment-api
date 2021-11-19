@@ -20,7 +20,7 @@ type Consumer interface {
 
 type consumer struct {
 	n      uint64
-	events chan<- apartment.ApartmentEvent
+	events chan<- apartment.Event
 
 	repo repo.EventRepo
 
@@ -33,11 +33,11 @@ type consumer struct {
 
 //Config comment for linter
 type Config struct {
-	n         uint64 //nolint
-	events    chan<- apartment.ApartmentEvent //nolint
-	repo      repo.EventRepo //nolint
-	batchSize uint64 //nolint
-	timeout   time.Duration //nolint
+	n         uint64                 //nolint
+	events    chan<- apartment.Event //nolint
+	repo      repo.EventRepo         //nolint
+	batchSize uint64                 //nolint
+	timeout   time.Duration          //nolint
 }
 
 //NewDbConsumer comment for linter
@@ -46,7 +46,7 @@ func NewDbConsumer(
 	batchSize uint64,
 	consumeTimeout time.Duration,
 	repo repo.EventRepo,
-	events chan<- apartment.ApartmentEvent) Consumer {
+	events chan<- apartment.Event) Consumer {
 
 	wg := &sync.WaitGroup{}
 

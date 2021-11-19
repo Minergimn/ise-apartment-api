@@ -6,5 +6,5 @@ import (
 
 //EventSender comment for linter
 type EventSender interface {
-	Send(subdomain *apartment.ApartmentEvent) error
+	Send(subdomain *apartment.Event) error
 }

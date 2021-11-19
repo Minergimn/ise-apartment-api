@@ -35,7 +35,7 @@ type Config struct {
 }
 
 type retranslator struct {
-	events     chan apartment.ApartmentEvent
+	events     chan apartment.Event
 	consumer   consumer.Consumer
 	producer   producer.Producer
 	workerPool *workerpool.WorkerPool
@@ -43,7 +43,7 @@ type retranslator struct {
 
 //NewRetranslator comment for linter
 func NewRetranslator(cfg Config) Retranslator {
-	events := make(chan apartment.ApartmentEvent, cfg.ChannelSize)
+	events := make(chan apartment.Event, cfg.ChannelSize)
 	workerPool := workerpool.New(cfg.WorkerCount)
 
 	consumer := consumer.NewDbConsumer(
