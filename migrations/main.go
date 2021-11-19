@@ -75,6 +75,6 @@ func initLogger(ctx context.Context, cfg config.Config) (syncFn func()) {
 	))
 
 	return func() {
-		notSugaredLogger.Sync()
+		notSugaredLogger.Sync() //nolint:errcheck
 	}
 }

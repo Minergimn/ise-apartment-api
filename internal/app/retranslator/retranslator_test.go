@@ -1,6 +1,7 @@
 package retranslator
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	apartment "github.com/ozonmp/ise-apartment-api/internal/model"
@@ -19,13 +20,14 @@ func TestStart(t *testing.T) {
 	repo := mocks.NewMockEventRepo(ctrl)
 	sender := mocks.NewMockEventSender(ctrl)
 	cfg := getConfig(repo, sender)
+	ctx := context.Background()
 
-	repo.EXPECT().Lock(gomock.Any()).AnyTimes()
+	repo.EXPECT().Lock(gomock.Any(), gomock.Any()).AnyTimes()
 
 	retranslator := NewRetranslator(cfg)
-	retranslator.Start()
+	retranslator.Start(ctx)
 	time.Sleep(time.Second)
-	retranslator.Close()
+	retranslator.Close(ctx)
 }
 
 func TestSendAndRemove(t *testing.T) {
@@ -35,6 +37,7 @@ func TestSendAndRemove(t *testing.T) {
 	repo := mocks.NewMockEventRepo(ctrl)
 	sender := mocks.NewMockEventSender(ctrl)
 	cfg := getConfig(repo, sender)
+	ctx := context.Background()
 
 	eventCount := 10
 	events := generateEvents(eventCount)
@@ -45,7 +48,7 @@ func TestSendAndRemove(t *testing.T) {
 
 	mockMethodRepoLock(repo, eventsLock, events, lockedEvents)
 
-	repo.EXPECT().Remove(gomock.Any()).DoAndReturn(func(ids []uint64) (err error) {
+	repo.EXPECT().Remove(gomock.Any(), gomock.Any()).DoAndReturn(func(ids []uint64) (err error) {
 		eventsLock.Lock()
 		defer eventsLock.Unlock()
 
@@ -69,9 +72,9 @@ func TestSendAndRemove(t *testing.T) {
 	}).AnyTimes()
 
 	retranslator := NewRetranslator(cfg)
-	retranslator.Start()
+	retranslator.Start(ctx)
 	time.Sleep(time.Second * 10)
-	retranslator.Close()
+	retranslator.Close(ctx)
 
 	if len(sendedEvents) != eventCount {
 		t.Errorf("Not all events were sended to kafka %d/%d", len(sendedEvents), eventCount)
@@ -93,6 +96,7 @@ func TestSendingFail_AllEventMustBeUnlocked(t *testing.T) {
 	repo := mocks.NewMockEventRepo(ctrl)
 	sender := mocks.NewMockEventSender(ctrl)
 	cfg := getConfig(repo, sender)
+	ctx := context.Background()
 
 	eventCount := 10
 	events := generateEvents(eventCount)
@@ -104,7 +108,7 @@ func TestSendingFail_AllEventMustBeUnlocked(t *testing.T) {
 	sender.EXPECT().Send(gomock.Any()).DoAndReturn(func(e *apartment.ApartmentEvent) (err error) {
 		return errors.New(fmt.Sprintf("Fail to send event #%d", e.ID))
 	}).AnyTimes()
-	repo.EXPECT().Unlock(gomock.Any()).DoAndReturn(func(ids []uint64) (err error) {
+	repo.EXPECT().Unlock(gomock.Any(), gomock.Any()).DoAndReturn(func(ids []uint64) (err error) {
 		eventsLock.Lock()
 		defer eventsLock.Unlock()
 
@@ -116,9 +120,9 @@ func TestSendingFail_AllEventMustBeUnlocked(t *testing.T) {
 	}).AnyTimes()
 
 	retranslator := NewRetranslator(cfg)
-	retranslator.Start()
+	retranslator.Start(ctx)
 	time.Sleep(time.Second * 10)
-	retranslator.Close()
+	retranslator.Close(ctx)
 
 	for _, status := range lockedEvents {
 		if status {
@@ -160,7 +164,7 @@ func generateEvents(eventCount int) []apartment.ApartmentEvent {
 }
 
 func mockMethodRepoLock(repo *mocks.MockEventRepo, eventsLock sync.Mutex, events []apartment.ApartmentEvent, lockedEvents map[uint64]bool) *gomock.Call {
-	return repo.EXPECT().Lock(gomock.Any()).DoAndReturn(func(count uint64) (result []apartment.ApartmentEvent, err error) {
+	return repo.EXPECT().Lock(gomock.Any(), gomock.Any()).DoAndReturn(func(count uint64) (result []apartment.ApartmentEvent, err error) {
 		eventsLock.Lock()
 		defer eventsLock.Unlock()
 
