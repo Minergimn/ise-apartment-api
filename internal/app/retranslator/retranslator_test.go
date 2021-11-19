@@ -61,11 +61,11 @@ func TestSendAndRemove(t *testing.T) {
 		sendedEventsLock.Lock()
 		defer sendedEventsLock.Unlock()
 
-		if _, ok := sendedEvents[e.ID]; ok {
+		_, ok := sendedEvents[e.ID]
+		if ok {
 			return nil
-		} else {
-			sendedEvents[e.ID] = *e
 		}
+		sendedEvents[e.ID] = *e
 
 		return nil
 	}).AnyTimes()

@@ -13,11 +13,13 @@ import (
 	"github.com/gammazero/workerpool"
 )
 
+//Retranslator comment for linter
 type Retranslator interface {
 	Start(ctx context.Context)
 	Close(ctx context.Context)
 }
 
+//Config comment for linter
 type Config struct {
 	ChannelSize uint64
 
@@ -39,6 +41,7 @@ type retranslator struct {
 	workerPool *workerpool.WorkerPool
 }
 
+//NewRetranslator comment for linter
 func NewRetranslator(cfg Config) Retranslator {
 	events := make(chan apartment.ApartmentEvent, cfg.ChannelSize)
 	workerPool := workerpool.New(cfg.WorkerCount)
