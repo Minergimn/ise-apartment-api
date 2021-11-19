@@ -25,7 +25,7 @@ type Producer interface {
 
 type producer struct {
 	n       uint64
-	timeout time.Duration
+	timeout time.Duration //nolint
 
 	sender sender.EventSender
 	events <-chan apartment.ApartmentEvent

@@ -52,6 +52,7 @@ type Swagger struct {
 	Filepath string `yaml:"filepath"`
 }
 
+//Telemetry - contains parameters for telemetry
 type Telemetry struct {
 	GraylogPath string `yaml:"graylogPath"`
 }

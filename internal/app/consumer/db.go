@@ -33,11 +33,11 @@ type consumer struct {
 
 //Config comment for linter
 type Config struct {
-	n         uint64
-	events    chan<- apartment.ApartmentEvent
-	repo      repo.EventRepo
-	batchSize uint64
-	timeout   time.Duration
+	n         uint64 //nolint
+	events    chan<- apartment.ApartmentEvent //nolint
+	repo      repo.EventRepo //nolint
+	batchSize uint64 //nolint
+	timeout   time.Duration //nolint
 }
 
 //NewDbConsumer comment for linter
