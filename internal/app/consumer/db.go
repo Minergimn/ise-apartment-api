@@ -80,6 +80,7 @@ func (c *consumer) Start(ctx context.Context) {
 						logger.DebugKV(ctx, fmt.Sprintf("Add event %d to retraslator from db", event.ID))
 					}
 				case <-ctx.Done():
+					ticker.Stop()
 					return
 				}
 			}

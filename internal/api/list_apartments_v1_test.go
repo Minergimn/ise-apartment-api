@@ -17,6 +17,9 @@ func Test_apartmentAPI_ListApartmentsV1(t *testing.T) {
 	api := NewApartmentAPI(repo, repoEvent)
 	ctx := context.Background()
 
+	repo.EXPECT().ListApartments(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).
+		AnyTimes()
+
 	var items []*ise_apartment_api.Apartment
 
 	tests := []struct {

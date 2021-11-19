@@ -2,7 +2,7 @@ package retranslator
 
 import (
 	"context"
-	"errors"
+	errors "errors"
 	"fmt"
 	apartment "github.com/ozonmp/ise-apartment-api/internal/model"
 	"sync"
@@ -46,9 +46,9 @@ func TestSendAndRemove(t *testing.T) {
 	var eventsLock sync.Mutex
 	var sendedEventsLock sync.Mutex
 
-	mockMethodRepoLock(repo, eventsLock, events, lockedEvents)
+	mockMethodRepoLock(repo, &eventsLock, events, lockedEvents)
 
-	repo.EXPECT().Remove(gomock.Any(), gomock.Any()).DoAndReturn(func(ids []uint64) (err error) {
+	repo.EXPECT().Remove(gomock.Any(), gomock.Any()).DoAndReturn(func(_ context.Context, ids []uint64) (err error) {
 		eventsLock.Lock()
 		defer eventsLock.Unlock()
 
@@ -103,12 +103,12 @@ func TestSendingFail_AllEventMustBeUnlocked(t *testing.T) {
 	lockedEvents := make(map[uint64]bool)
 	var eventsLock sync.Mutex
 
-	mockMethodRepoLock(repo, eventsLock, events, lockedEvents)
+	mockMethodRepoLock(repo, &eventsLock, events, lockedEvents) //nolint:govet
 
 	sender.EXPECT().Send(gomock.Any()).DoAndReturn(func(e *apartment.ApartmentEvent) (err error) {
 		return errors.New(fmt.Sprintf("Fail to send event #%d", e.ID))
 	}).AnyTimes()
-	repo.EXPECT().Unlock(gomock.Any(), gomock.Any()).DoAndReturn(func(ids []uint64) (err error) {
+	repo.EXPECT().Unlock(gomock.Any(), gomock.Any()).DoAndReturn(func(_ context.Context, ids []uint64) (err error) {
 		eventsLock.Lock()
 		defer eventsLock.Unlock()
 
@@ -163,8 +163,8 @@ func generateEvents(eventCount int) []apartment.ApartmentEvent {
 	return events
 }
 
-func mockMethodRepoLock(repo *mocks.MockEventRepo, eventsLock sync.Mutex, events []apartment.ApartmentEvent, lockedEvents map[uint64]bool) *gomock.Call {
-	return repo.EXPECT().Lock(gomock.Any(), gomock.Any()).DoAndReturn(func(count uint64) (result []apartment.ApartmentEvent, err error) {
+func mockMethodRepoLock(repo *mocks.MockEventRepo, eventsLock *sync.Mutex, events []apartment.ApartmentEvent, lockedEvents map[uint64]bool) *gomock.Call {
+	return repo.EXPECT().Lock(gomock.Any(), gomock.Any()).DoAndReturn(func(_ context.Context, count uint64) (result []apartment.ApartmentEvent, err error) {
 		eventsLock.Lock()
 		defer eventsLock.Unlock()
 

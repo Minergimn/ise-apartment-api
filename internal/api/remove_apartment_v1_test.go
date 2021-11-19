@@ -17,6 +17,9 @@ func Test_apartmentAPI_RemoveApartmentV1(t *testing.T) {
 	api := NewApartmentAPI(repo, repoEvent)
 	ctx := context.Background()
 
+	repo.EXPECT().DeleteApartment(gomock.Any(), gomock.Any()).
+		AnyTimes()
+
 	tests := []struct {
 		name    string
 		req     ise_apartment_api.RemoveApartmentV1Request
