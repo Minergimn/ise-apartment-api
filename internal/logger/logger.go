@@ -33,30 +33,36 @@ func fromContext(ctx context.Context) *zap.SugaredLogger {
 	return result
 }
 
+//ErrorKV comment for linter
 func ErrorKV(ctx context.Context, message string, kvs ...interface{}) {
 	fromContext(ctx).Error(append([]interface{}{message}, kvs...)...)
 }
-
+//WarnKV comment for linter
 func WarnKV(ctx context.Context, message string, kvs ...interface{}) {
 	fromContext(ctx).Warn(append([]interface{}{message}, kvs...)...)
 }
 
+//InfoKV comment for linter
 func InfoKV(ctx context.Context, message string, kvs ...interface{}) {
 	fromContext(ctx).Info(append([]interface{}{message}, kvs...)...)
 }
 
+//DebugKV comment for linter
 func DebugKV(ctx context.Context, message string, kvs ...interface{}) {
 	fromContext(ctx).Debug(append([]interface{}{message}, kvs...)...)
 }
 
+//FatalKV comment for linter
 func FatalKV(ctx context.Context, message string, kvs ...interface{}) {
 	fromContext(ctx).Fatal(append([]interface{}{message}, kvs...)...)
 }
 
+//AttachLogger comment for linter
 func AttachLogger(ctx context.Context, logger *zap.SugaredLogger) context.Context {
 	return context.WithValue(ctx, attachedLoggerKey, logger)
 }
 
+//CloneWithLevel comment for linter
 func CloneWithLevel(ctx context.Context, newLevel zapcore.Level) *zap.SugaredLogger {
 	return fromContext(ctx).
 		Desugar().
@@ -64,6 +70,7 @@ func CloneWithLevel(ctx context.Context, newLevel zapcore.Level) *zap.SugaredLog
 		Sugar()
 }
 
+//SetLogger comment for linter
 func SetLogger(newLogger *zap.SugaredLogger) {
 	globalLogger = newLogger
 }

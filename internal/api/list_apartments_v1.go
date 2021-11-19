@@ -62,7 +62,7 @@ func (a *apartmentAPI) ListApartmentsV1(
 	var items []*ise_apartment_api.Apartment
 
 	for _, apartment := range apartments {
-		items = append(items, a.mapApartmentFromDbToApi(&apartment))
+		items = append(items, a.mapApartmentFromDbToAPI(&apartment))
 	}
 
 	return &ise_apartment_api.ListApartmentsV1Response{

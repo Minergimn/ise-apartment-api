@@ -38,7 +38,7 @@ func (a *apartmentAPI) CreateApartmentV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	apt := a.mapApartmentFromApiToDb(req.Value)
+	apt := a.mapApartmentFromAPIToDb(req.Value)
 
 	id, err := a.repo.CreateApartment(ctx, apt)
 	if err != nil {
@@ -49,7 +49,7 @@ func (a *apartmentAPI) CreateApartmentV1(
 
 	apt.ID = id
 	createEvent := &apartment.ApartmentEvent{
-		ApartmentId: id,
+		ApartmentID: id,
 		Type:        apartment.Created,
 		Status:      apartment.Deferred,
 		Entity:      apt,

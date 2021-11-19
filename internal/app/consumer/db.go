@@ -12,6 +12,7 @@ import (
 	"github.com/ozonmp/ise-apartment-api/internal/model"
 )
 
+//Consumer comment for linter
 type Consumer interface {
 	Start(ctx context.Context)
 	Close(ctx context.Context)
@@ -30,6 +31,7 @@ type consumer struct {
 	wg   *sync.WaitGroup
 }
 
+//Config comment for linter
 type Config struct {
 	n         uint64
 	events    chan<- apartment.ApartmentEvent
@@ -38,6 +40,7 @@ type Config struct {
 	timeout   time.Duration
 }
 
+//NewDbConsumer comment for linter
 func NewDbConsumer(
 	n uint64,
 	batchSize uint64,

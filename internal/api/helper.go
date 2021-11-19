@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func (a *apartmentAPI) mapApartmentFromDbToApi(from *apartment.Apartment) *ise_apartment_api.Apartment {
+func (a *apartmentAPI) mapApartmentFromDbToAPI(from *apartment.Apartment) *ise_apartment_api.Apartment {
 	return &ise_apartment_api.Apartment{
 		Id:     from.ID,
 		Object: from.Object,
@@ -15,7 +15,7 @@ func (a *apartmentAPI) mapApartmentFromDbToApi(from *apartment.Apartment) *ise_a
 	}
 }
 
-func (a *apartmentAPI) mapApartmentFromApiToDb(from *ise_apartment_api.Apartment) *apartment.Apartment {
+func (a *apartmentAPI) mapApartmentFromAPIToDb(from *ise_apartment_api.Apartment) *apartment.Apartment {
 	return &apartment.Apartment{
 		Object: from.Object,
 		Owner:  from.Owner,

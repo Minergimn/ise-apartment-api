@@ -123,7 +123,7 @@ func (m *DescribeApartmentV1Request) Validate() error {
 
 	if m.GetApartmentId() <= 0 {
 		return DescribeApartmentV1RequestValidationError{
-			field:  "ApartmentId",
+			field:  "ApartmentID",
 			reason: "value must be greater than 0",
 		}
 	}
@@ -357,7 +357,7 @@ func (m *CreateApartmentV1Response) Validate() error {
 		return nil
 	}
 
-	// no validation rules for ApartmentId
+	// no validation rules for ApartmentID
 
 	return nil
 }
@@ -587,7 +587,7 @@ func (m *RemoveApartmentV1Request) Validate() error {
 
 	if m.GetApartmentId() <= 0 {
 		return RemoveApartmentV1RequestValidationError{
-			field:  "ApartmentId",
+			field:  "ApartmentID",
 			reason: "value must be greater than 0",
 		}
 	}

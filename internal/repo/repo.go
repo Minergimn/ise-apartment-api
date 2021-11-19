@@ -2,7 +2,6 @@ package repo
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"github.com/opentracing/opentracing-go"
 
@@ -48,7 +47,7 @@ func (r *repo) GetApartment(ctx context.Context, apartmentID uint64) (*model.Apa
 	err = r.db.GetContext(ctx, &res, s, args...)
 
 	if res.Status == model.Deleted {
-		return nil, errors.New(fmt.Sprintf("Apartment id %d found but in deleted status", apartmentID))
+		return nil, fmt.Errorf("Apartment id %d found but in deleted status", apartmentID)
 	}
 
 	return &res, err

@@ -55,6 +55,6 @@ func (a *apartmentAPI) DescribeApartmentV1(
 	logger.DebugKV(ctx, "DescribeApartmentV1 - success")
 
 	return &ise_apartment_api.DescribeApartmentV1Response{
-		Value: a.mapApartmentFromDbToApi(apartment),
+		Value: a.mapApartmentFromDbToAPI(apartment),
 	}, nil
 }

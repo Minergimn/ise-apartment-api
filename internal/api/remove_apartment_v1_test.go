@@ -39,7 +39,7 @@ func Test_apartmentAPI_RemoveApartmentV1(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range tests { //nolint:govet
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := api.RemoveApartmentV1(ctx, &tt.req)
 			if (err != nil) != tt.wantErr {

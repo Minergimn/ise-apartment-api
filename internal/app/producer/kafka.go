@@ -17,6 +17,7 @@ import (
 	"github.com/gammazero/workerpool"
 )
 
+//Producer comment for linter
 type Producer interface {
 	Start(ctx context.Context)
 	Close(ctx context.Context)
@@ -37,6 +38,7 @@ type producer struct {
 	wg   *sync.WaitGroup
 }
 
+//NewKafkaProducer comment for linter
 func NewKafkaProducer(
 	n uint64,
 	sender sender.EventSender,

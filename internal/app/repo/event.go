@@ -13,6 +13,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// EventRepo comment for linters
 type EventRepo interface {
 	Lock(ctx context.Context, n uint64) ([]apartment.ApartmentEvent, error)
 	Unlock(ctx context.Context, eventIDs []uint64) error
@@ -91,7 +92,7 @@ func (e eventRepo) Add(ctx context.Context, events []apartment.ApartmentEvent) e
 		"updated")
 
 	for _, event := range events {
-		query = query.Values(event.ApartmentId, event.Type.String(), event.Status.String(), event.Entity, false, false, time.Now())
+		query = query.Values(event.ApartmentID, event.Type.String(), event.Status.String(), event.Entity, false, false, time.Now())
 	}
 
 	query = query.Suffix("RETURNING id").RunWith(e.db)

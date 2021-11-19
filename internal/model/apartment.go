@@ -2,6 +2,7 @@ package apartment
 
 import "fmt"
 
+//Apartment comment for linter
 type Apartment struct {
 	ID     uint64 `db:"id"`
 	Object string `db:"object"`
@@ -9,31 +10,42 @@ type Apartment struct {
 	Status Status `db:"status"`
 }
 
+//Status comment for linter
 type Status uint8
 
 const (
+	//Active comment for linter
 	Active Status = iota
+	//Deleted comment for linter
 	Deleted
 )
 
+//EventType comment for linter
 type EventType uint8
 
+//EventStatus comment for linter
 type EventStatus uint8
 
 const (
+	//Created comment for linter
 	Created EventType = iota
+	//Updated comment for linter
 	Updated
+	//Removed comment for linter
 	Removed
 )
 
 const (
+	//Deferred comment for linter
 	Deferred EventStatus = iota
+	//Processed comment for linter
 	Processed
 )
 
+//ApartmentEvent comment for linter
 type ApartmentEvent struct {
 	ID          uint64      `db:"id"`
-	ApartmentId uint64      `db:"apartment_id"`
+	ApartmentID uint64      `db:"apartment_id"`
 	Type        EventType   `db:"type"`
 	Status      EventStatus `db:"status"`
 	Entity      *Apartment  `db:"payload"`

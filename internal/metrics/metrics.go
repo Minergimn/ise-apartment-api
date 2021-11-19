@@ -27,23 +27,30 @@ var (
 type eventType uint8
 
 const (
-	Created = eventType(iota)
+	//Created comment for linter
+	Created eventType = eventType(iota)
+	//Updated comment for linter
 	Updated
+	//Deleted comment for linter
 	Deleted
 )
 
+//IncTotalApartmentNotFound comment for linter
 func IncTotalApartmentNotFound() {
 	totalApartmentNotFound.Inc()
 }
 
+//IncTotalApartmentCUDEvents comment for linter
 func IncTotalApartmentCUDEvents(e eventType) {
 	totalApartmentCUDEvents.WithLabelValues(e.String()).Inc()
 }
 
+//AddCurrentRetranslatorEventsCount comment for linter
 func AddCurrentRetranslatorEventsCount(n float64) {
 	currentRetranslatorEventsCount.Add(n)
 }
 
+//SubCurrentRetranslatorEventsCount comment for linter
 func SubCurrentRetranslatorEventsCount(n float64) {
 	currentRetranslatorEventsCount.Sub(n)
 }

@@ -2,7 +2,6 @@ package retranslator
 
 import (
 	"context"
-	errors "errors"
 	"fmt"
 	apartment "github.com/ozonmp/ise-apartment-api/internal/model"
 	"sync"
@@ -106,7 +105,7 @@ func TestSendingFail_AllEventMustBeUnlocked(t *testing.T) {
 	mockMethodRepoLock(repo, &eventsLock, events, lockedEvents) //nolint:govet
 
 	sender.EXPECT().Send(gomock.Any()).DoAndReturn(func(e *apartment.ApartmentEvent) (err error) {
-		return errors.New(fmt.Sprintf("Fail to send event #%d", e.ID))
+		return fmt.Errorf("Fail to send event #%d", e.ID)
 	}).AnyTimes()
 	repo.EXPECT().Unlock(gomock.Any(), gomock.Any()).DoAndReturn(func(_ context.Context, ids []uint64) (err error) {
 		eventsLock.Lock()
