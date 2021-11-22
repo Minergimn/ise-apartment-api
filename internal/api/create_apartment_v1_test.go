@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	apartment "github.com/ozonmp/ise-apartment-api/internal/model"
 	"math/rand"
 	"reflect"
 	"strings"
@@ -20,7 +21,15 @@ func Test_apartmentAPI_CreateApartmentV1(t *testing.T) {
 	repoEvent := mocks.NewMockEventRepo(ctrl)
 	api := NewApartmentAPI(repo, repoEvent)
 	ctx := context.Background()
-	wantResponse := &ise_apartment_api.CreateApartmentV1Response{}
+	wantResponse := &ise_apartment_api.CreateApartmentV1Response{ApartmentId: 1}
+
+	repo.EXPECT().CreateApartment(gomock.Any(), gomock.Any()).
+		DoAndReturn(func(_ context.Context, _ *apartment.Apartment) (id uint64, err error) {
+			return 1, nil
+		}).
+		AnyTimes()
+
+	repoEvent.EXPECT().Add(gomock.Any(), gomock.Any()).AnyTimes()
 
 	tests := []struct {
 		name    string
@@ -62,7 +71,7 @@ func Test_apartmentAPI_CreateApartmentV1(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range tests { //nolint:govet
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := api.CreateApartmentV1(ctx, &tt.req)
 			if (err != nil) != tt.wantErr {

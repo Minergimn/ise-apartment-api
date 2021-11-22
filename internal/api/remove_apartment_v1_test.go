@@ -17,6 +17,9 @@ func Test_apartmentAPI_RemoveApartmentV1(t *testing.T) {
 	api := NewApartmentAPI(repo, repoEvent)
 	ctx := context.Background()
 
+	repo.EXPECT().DeleteApartment(gomock.Any(), gomock.Any()).
+		AnyTimes()
+
 	tests := []struct {
 		name    string
 		req     ise_apartment_api.RemoveApartmentV1Request
@@ -36,7 +39,7 @@ func Test_apartmentAPI_RemoveApartmentV1(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
+	for _, tt := range tests { //nolint:govet
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := api.RemoveApartmentV1(ctx, &tt.req)
 			if (err != nil) != tt.wantErr {

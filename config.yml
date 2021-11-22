@@ -1,7 +1,8 @@
 project:
   name: Ozon Code Platform Apartment API
-  debug: true
+  debug: false
   environment: development
+  serviceName: "ise-apartment-api"
 
 grpc:
   host: 0.0.0.0
@@ -13,10 +14,6 @@ grpc:
 rest:
   host: 0.0.0.0
   port: 8080
-  allowedCorsOrigins:
-    - "http://localhost:8081"
-    - "http://0.0.0.0:8081"
-    - "http://127.0.0.1:8081"
 
 metrics:
   host: 0.0.0.0
@@ -24,7 +21,6 @@ metrics:
   path: /metrics
 
 jaeger:
-  service: "ise-apartment-api"
   host: "jaeger"
   port: ":6831"
 
@@ -47,3 +43,6 @@ kafka:
   brokers:
     - "kafka:9092"
     - "localhost:9094"
+    -
+telemetry:
+  graylogPath: graylog:12201

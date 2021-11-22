@@ -2,8 +2,8 @@ package repo
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"github.com/opentracing/opentracing-go"
 
 	model "github.com/ozonmp/ise-apartment-api/internal/model"
 
@@ -34,6 +34,9 @@ func pgQb() sq.StatementBuilderType {
 }
 
 func (r *repo) GetApartment(ctx context.Context, apartmentID uint64) (*model.Apartment, error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "repo.GetApartment")
+	defer span.Finish()
+
 	query := pgQb().Select("*").From("apartments").Where(sq.Eq{"id": apartmentID})
 
 	s, args, err := query.ToSql()
@@ -44,13 +47,16 @@ func (r *repo) GetApartment(ctx context.Context, apartmentID uint64) (*model.Apa
 	err = r.db.GetContext(ctx, &res, s, args...)
 
 	if res.Status == model.Deleted {
-		return nil, errors.New(fmt.Sprintf("Apartment id %d found but in deleted status", apartmentID))
+		return nil, fmt.Errorf("Apartment id %d found but in deleted status", apartmentID)
 	}
 
 	return &res, err
 }
 
 func (r *repo) ListApartments(ctx context.Context, cursor uint64, limit uint64, owner string, object string, ids []uint64) ([]model.Apartment, error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "repo.ListApartments")
+	defer span.Finish()
+
 	query := pgQb().Select("*").From("apartments").
 		Where(sq.Eq{"status": 0}).
 		OrderBy("id")
@@ -86,6 +92,9 @@ func (r *repo) ListApartments(ctx context.Context, cursor uint64, limit uint64, 
 }
 
 func (r *repo) CreateApartment(ctx context.Context, apartment *model.Apartment) (uint64, error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "repo.CreateApartment")
+	defer span.Finish()
+
 	query := pgQb().Insert("apartments").
 		Columns("object", "owner", "status").
 		Values(apartment.Object, apartment.Owner, 0).
@@ -106,6 +115,9 @@ func (r *repo) CreateApartment(ctx context.Context, apartment *model.Apartment) 
 }
 
 func (r *repo) DeleteApartment(ctx context.Context, apartmentID uint64) (bool, error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "repo.DeleteApartment")
+	defer span.Finish()
+
 	apartment, err := r.GetApartment(ctx, apartmentID)
 	if err != nil {
 		return false, err

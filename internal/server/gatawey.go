@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+	"github.com/ozonmp/ise-apartment-api/internal/logger"
 	"net/http"
 
 	pb "github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
@@ -13,7 +14,6 @@ import (
 	"github.com/opentracing/opentracing-go/ext"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 )
 
@@ -24,11 +24,13 @@ var (
 	})
 )
 
-func createGatewayServer(grpcAddr, gatewayAddr string, allowedOrigins []string) *http.Server {
+func createGatewayServer(grpcAddr, gatewayAddr string) *http.Server {
+	ctx := context.Background()
+
 	// Create a client connection to the gRPC Server we just started.
 	// This is where the gRPC-Gateway proxies the requests.
 	conn, err := grpc.DialContext(
-		context.Background(),
+		ctx,
 		grpcAddr,
 		grpc.WithUnaryInterceptor(
 			grpc_opentracing.UnaryClientInterceptor(
@@ -38,17 +40,17 @@ func createGatewayServer(grpcAddr, gatewayAddr string, allowedOrigins []string) 
 		grpc.WithInsecure(),
 	)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Failed to dial server")
+		logger.FatalKV(ctx, "Failed to dial server", "err", err)
 	}
 
 	mux := runtime.NewServeMux()
 	if err := pb.RegisterIseApartmentApiServiceHandler(context.Background(), mux, conn); err != nil {
-		log.Fatal().Err(err).Msg("Failed registration handler")
+		logger.FatalKV(ctx, "Failed registration handler", "err", err)
 	}
 
 	gatewayServer := &http.Server{
 		Addr:    gatewayAddr,
-		Handler: cors(tracingWrapper(mux), allowedOrigins),
+		Handler: tracingWrapper(mux),
 	}
 
 	return gatewayServer
@@ -70,29 +72,6 @@ func tracingWrapper(h http.Handler) http.Handler {
 			)
 			r = r.WithContext(opentracing.ContextWithSpan(r.Context(), serverSpan))
 			defer serverSpan.Finish()
-		}
-		h.ServeHTTP(w, r)
-	})
-}
-
-func cors(h http.Handler, allowedOrigins []string) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		providedOrigin := r.Header.Get("Origin")
-		matches := false
-		for _, allowedOrigin := range allowedOrigins {
-			if providedOrigin == allowedOrigin {
-				matches = true
-				break
-			}
-		}
-
-		if matches {
-			w.Header().Set("Access-Control-Allow-Origin", providedOrigin)
-			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")
-			w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization, ResponseType")
-		}
-		if r.Method == "OPTIONS" {
-			return
 		}
 		h.ServeHTTP(w, r)
 	})
