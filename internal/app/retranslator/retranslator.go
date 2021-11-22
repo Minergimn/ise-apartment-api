@@ -15,8 +15,8 @@ import (
 
 //Retranslator comment for linter
 type Retranslator interface {
-	Start(ctx context.Context)
-	Close(ctx context.Context)
+	Start()
+	Close()
 }
 
 //Config comment for linter
@@ -30,6 +30,8 @@ type Config struct {
 	ProducerCount uint64
 	WorkerCount   int
 
+	Ctx context.Context
+
 	Repo   repo.EventRepo
 	Sender sender.EventSender
 }
@@ -39,6 +41,8 @@ type retranslator struct {
 	consumer   consumer.Consumer
 	producer   producer.Producer
 	workerPool *workerpool.WorkerPool
+	ctx        context.Context
+	cancelFunc context.CancelFunc
 }
 
 //NewRetranslator comment for linter
@@ -46,13 +50,17 @@ func NewRetranslator(cfg Config) Retranslator {
 	events := make(chan apartment.Event, cfg.ChannelSize)
 	workerPool := workerpool.New(cfg.WorkerCount)
 
+	ctx, cancel := context.WithCancel(cfg.Ctx)
+
 	consumer := consumer.NewDbConsumer(
+		ctx,
 		cfg.ConsumerCount,
 		cfg.ConsumeSize,
 		cfg.ConsumeTimeout,
 		cfg.Repo,
 		events)
 	producer := producer.NewKafkaProducer(
+		ctx,
 		cfg.ProducerCount,
 		cfg.Sender,
 		events,
@@ -64,16 +72,19 @@ func NewRetranslator(cfg Config) Retranslator {
 		consumer:   consumer,
 		producer:   producer,
 		workerPool: workerPool,
+		ctx: 		ctx,
+		cancelFunc: cancel,
 	}
 }
 
-func (r *retranslator) Start(ctx context.Context) {
-	r.producer.Start(ctx)
-	r.consumer.Start(ctx)
+func (r *retranslator) Start() {
+	r.producer.Start()
+	r.consumer.Start()
 }
 
-func (r *retranslator) Close(ctx context.Context) {
-	r.consumer.Close(ctx)
-	r.producer.Close(ctx)
+func (r *retranslator) Close() {
+	r.cancelFunc()
+	r.consumer.Close()
+	r.producer.Close()
 	r.workerPool.StopWait()
 }

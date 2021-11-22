@@ -19,14 +19,13 @@ func TestStart(t *testing.T) {
 	repo := mocks.NewMockEventRepo(ctrl)
 	sender := mocks.NewMockEventSender(ctrl)
 	cfg := getConfig(repo, sender)
-	ctx := context.Background()
 
 	repo.EXPECT().Lock(gomock.Any(), gomock.Any()).AnyTimes()
 
 	retranslator := NewRetranslator(cfg)
-	retranslator.Start(ctx)
+	retranslator.Start()
 	time.Sleep(time.Second)
-	retranslator.Close(ctx)
+	retranslator.Close()
 }
 
 func TestSendAndRemove(t *testing.T) {
@@ -36,7 +35,6 @@ func TestSendAndRemove(t *testing.T) {
 	repo := mocks.NewMockEventRepo(ctrl)
 	sender := mocks.NewMockEventSender(ctrl)
 	cfg := getConfig(repo, sender)
-	ctx := context.Background()
 
 	eventCount := 10
 	events := generateEvents(eventCount)
@@ -71,9 +69,9 @@ func TestSendAndRemove(t *testing.T) {
 	}).AnyTimes()
 
 	retranslator := NewRetranslator(cfg)
-	retranslator.Start(ctx)
-	time.Sleep(time.Second * 10)
-	retranslator.Close(ctx)
+	retranslator.Start()
+	time.Sleep(time.Second * 15)
+	retranslator.Close()
 
 	if len(sendedEvents) != eventCount {
 		t.Errorf("Not all events were sended to kafka %d/%d", len(sendedEvents), eventCount)
@@ -95,7 +93,6 @@ func TestSendingFail_AllEventMustBeUnlocked(t *testing.T) {
 	repo := mocks.NewMockEventRepo(ctrl)
 	sender := mocks.NewMockEventSender(ctrl)
 	cfg := getConfig(repo, sender)
-	ctx := context.Background()
 
 	eventCount := 10
 	events := generateEvents(eventCount)
@@ -119,9 +116,9 @@ func TestSendingFail_AllEventMustBeUnlocked(t *testing.T) {
 	}).AnyTimes()
 
 	retranslator := NewRetranslator(cfg)
-	retranslator.Start(ctx)
-	time.Sleep(time.Second * 10)
-	retranslator.Close(ctx)
+	retranslator.Start()
+	time.Sleep(time.Second * 15)
+	retranslator.Close()
 
 	for _, status := range lockedEvents {
 		if status {
@@ -132,6 +129,8 @@ func TestSendingFail_AllEventMustBeUnlocked(t *testing.T) {
 }
 
 func getConfig(repo *mocks.MockEventRepo, sender *mocks.MockEventSender) Config {
+	ctx := context.Background()
+
 	cfg := Config{
 		ChannelSize:    512,
 		ConsumerCount:  5,
@@ -141,6 +140,7 @@ func getConfig(repo *mocks.MockEventRepo, sender *mocks.MockEventSender) Config 
 		WorkerCount:    10,
 		Repo:           repo,
 		Sender:         sender,
+		Ctx:            ctx,
 	}
 	return cfg
 }
