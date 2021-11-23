@@ -53,14 +53,12 @@ func NewRetranslator(cfg Config) Retranslator {
 	ctx, cancel := context.WithCancel(cfg.Ctx)
 
 	consumer := consumer.NewDbConsumer(
-		ctx,
 		cfg.ConsumerCount,
 		cfg.ConsumeSize,
 		cfg.ConsumeTimeout,
 		cfg.Repo,
 		events)
 	producer := producer.NewKafkaProducer(
-		ctx,
 		cfg.ProducerCount,
 		cfg.Sender,
 		events,
@@ -78,8 +76,8 @@ func NewRetranslator(cfg Config) Retranslator {
 }
 
 func (r *retranslator) Start() {
-	r.producer.Start()
-	r.consumer.Start()
+	r.producer.Start(r.ctx)
+	r.consumer.Start(r.ctx)
 }
 
 func (r *retranslator) Close() {

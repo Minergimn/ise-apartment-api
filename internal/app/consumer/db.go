@@ -14,7 +14,7 @@ import (
 
 //Consumer comment for linter
 type Consumer interface {
-	Start()
+	Start(context.Context)
 	Close()
 }
 
@@ -27,8 +27,6 @@ type consumer struct {
 	batchSize uint64
 	timeout   time.Duration
 
-	ctx context.Context
-	cancelFunc context.CancelFunc
 	wg   *sync.WaitGroup
 }
 
@@ -43,14 +41,12 @@ type Config struct {
 
 //NewDbConsumer comment for linter
 func NewDbConsumer(
-	ctx context.Context,
 	n uint64,
 	batchSize uint64,
 	consumeTimeout time.Duration,
 	repo repo.EventRepo,
 	events chan<- apartment.Event) Consumer {
 
-	ctx, cancel := context.WithCancel(ctx)
 	wg := &sync.WaitGroup{}
 
 	return &consumer{
@@ -60,12 +56,10 @@ func NewDbConsumer(
 		repo:       repo,
 		events:     events,
 		wg:         wg,
-		ctx:        ctx,
-		cancelFunc: cancel,
 	}
 }
 
-func (c *consumer) Start() {
+func (c *consumer) Start(ctx context.Context) {
 
 	for i := uint64(0); i < c.n; i++ {
 		c.wg.Add(1)
@@ -76,16 +70,16 @@ func (c *consumer) Start() {
 			for {
 				select {
 				case <-ticker.C:
-					events, err := c.repo.Lock(c.ctx, c.batchSize)
+					events, err := c.repo.Lock(ctx, c.batchSize)
 					if err != nil {
 						continue
 					}
 					for _, event := range events {
 						c.events <- event
 						metrics.AddCurrentRetranslatorEventsCount(1)
-						logger.DebugKV(c.ctx, fmt.Sprintf("Add event %d to retraslator from db", event.ID))
+						logger.DebugKV(ctx, fmt.Sprintf("Add event %d to retraslator from db", event.ID))
 					}
-				case <-c.ctx.Done():
+				case <-ctx.Done():
 					ticker.Stop()
 					return
 				}

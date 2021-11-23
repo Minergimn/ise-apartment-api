@@ -19,7 +19,7 @@ import (
 
 //Producer comment for linter
 type Producer interface {
-	Start()
+	Start(context.Context)
 	Close()
 }
 
@@ -34,14 +34,11 @@ type producer struct {
 
 	workerPool *workerpool.WorkerPool
 
-	ctx context.Context
-	cancelFunc context.CancelFunc
 	wg   *sync.WaitGroup
 }
 
 //NewKafkaProducer comment for linter
 func NewKafkaProducer(
-	ctx context.Context,
 	n uint64,
 	sender sender.EventSender,
 	events <-chan apartment.Event,
@@ -49,7 +46,6 @@ func NewKafkaProducer(
 	workerPool *workerpool.WorkerPool,
 ) Producer {
 
-	ctx, cancel := context.WithCancel(ctx)
 	wg := &sync.WaitGroup{}
 
 	return &producer{
@@ -59,12 +55,10 @@ func NewKafkaProducer(
 		repo:       repo,
 		workerPool: workerPool,
 		wg:         wg,
-		ctx: ctx,
-		cancelFunc: cancel,
 	}
 }
 
-func (p *producer) Start() {
+func (p *producer) Start(ctx context.Context) {
 	for i := uint64(0); i < p.n; i++ {
 		p.wg.Add(1)
 		go func() {
@@ -74,24 +68,24 @@ func (p *producer) Start() {
 				case event := <-p.events:
 					if err := p.sender.Send(&event); err != nil {
 						p.workerPool.Submit(func() {
-							logger.DebugKV(p.ctx, fmt.Sprintf("Sending of event %s failed with error: %t", event.String(), err))
+							logger.DebugKV(ctx, fmt.Sprintf("Sending of event %s failed with error: %t", event.String(), err))
 
-							if err = p.repo.Unlock(p.ctx, []uint64{event.ID}); err != nil {
-								logger.DebugKV(p.ctx, fmt.Sprintf("Unlock event %s has error: %t", event.String(), err))
+							if err = p.repo.Unlock(ctx, []uint64{event.ID}); err != nil {
+								logger.DebugKV(ctx, fmt.Sprintf("Unlock event %s has error: %t", event.String(), err))
 							}
 						})
 					} else {
 						p.workerPool.Submit(func() {
-							logger.DebugKV(p.ctx, fmt.Sprintf("Sending of event %d was succeeded", event.ID))
+							logger.DebugKV(ctx, fmt.Sprintf("Sending of event %d was succeeded", event.ID))
 
-							if err = p.repo.Remove(p.ctx, []uint64{event.ID}); err != nil {
-								logger.DebugKV(p.ctx, fmt.Sprintf("Removing event %s has error: %t", event.String(), err))
+							if err = p.repo.Remove(ctx, []uint64{event.ID}); err != nil {
+								logger.DebugKV(ctx, fmt.Sprintf("Removing event %s has error: %t", event.String(), err))
 							}
 
 							metrics.SubCurrentRetranslatorEventsCount(1)
 						})
 					}
-				case <-p.ctx.Done():
+				case <-ctx.Done():
 					return
 				}
 			}
