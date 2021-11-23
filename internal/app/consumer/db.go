@@ -14,8 +14,8 @@ import (
 
 //Consumer comment for linter
 type Consumer interface {
-	Start(ctx context.Context)
-	Close(ctx context.Context)
+	Start(context.Context)
+	Close()
 }
 
 type consumer struct {
@@ -27,7 +27,6 @@ type consumer struct {
 	batchSize uint64
 	timeout   time.Duration
 
-	cancelFunc context.CancelFunc
 	wg   *sync.WaitGroup
 }
 
@@ -51,18 +50,16 @@ func NewDbConsumer(
 	wg := &sync.WaitGroup{}
 
 	return &consumer{
-		n:         n,
-		batchSize: batchSize,
-		timeout:   consumeTimeout,
-		repo:      repo,
-		events:    events,
-		wg:        wg,
+		n:          n,
+		batchSize:  batchSize,
+		timeout:    consumeTimeout,
+		repo:       repo,
+		events:     events,
+		wg:         wg,
 	}
 }
 
 func (c *consumer) Start(ctx context.Context) {
-	ctx, cancel := context.WithCancel(ctx)
-	c.cancelFunc = cancel
 
 	for i := uint64(0); i < c.n; i++ {
 		c.wg.Add(1)
@@ -91,7 +88,6 @@ func (c *consumer) Start(ctx context.Context) {
 	}
 }
 
-func (c *consumer) Close(ctx context.Context) {
-	c.cancelFunc()
+func (c *consumer) Close() {
 	c.wg.Wait()
 }

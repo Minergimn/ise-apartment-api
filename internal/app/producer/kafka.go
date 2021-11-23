@@ -19,8 +19,8 @@ import (
 
 //Producer comment for linter
 type Producer interface {
-	Start(ctx context.Context)
-	Close(ctx context.Context)
+	Start(context.Context)
+	Close()
 }
 
 type producer struct {
@@ -34,7 +34,6 @@ type producer struct {
 
 	workerPool *workerpool.WorkerPool
 
-	cancelFunc context.CancelFunc
 	wg   *sync.WaitGroup
 }
 
@@ -60,9 +59,6 @@ func NewKafkaProducer(
 }
 
 func (p *producer) Start(ctx context.Context) {
-	ctx, cancel := context.WithCancel(ctx)
-	p.cancelFunc = cancel
-
 	for i := uint64(0); i < p.n; i++ {
 		p.wg.Add(1)
 		go func() {
@@ -97,7 +93,6 @@ func (p *producer) Start(ctx context.Context) {
 	}
 }
 
-func (p *producer) Close(ctx context.Context) {
-	p.cancelFunc()
+func (p *producer) Close() {
 	p.wg.Wait()
 }
