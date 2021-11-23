@@ -43,7 +43,7 @@ func (e eventRepo) Lock(ctx context.Context, n uint64) ([]apartment.Event, error
 	query := pgQb().Select("*").From("apartments_events").
 		Where(sq.Eq{"is_locked": false}).
 		Where(sq.Eq{"is_deleted": false}).
-		Where(sq.Eq{"status": apartment.Deferred.String()}).
+		Where(sq.Eq{"status": apartment.Deferred}).
 		OrderBy("id").Limit(n)
 
 	s, args, err := query.ToSql()
@@ -63,7 +63,7 @@ func (e eventRepo) Lock(ctx context.Context, n uint64) ([]apartment.Event, error
 		eventIDs = append(eventIDs, apt.ID)
 	}
 
-	err = e.setLocked(nil, eventIDs, true)
+	err = e.setLocked(ctx, eventIDs, true)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +92,7 @@ func (e eventRepo) Add(ctx context.Context, events []apartment.Event) error {
 		"updated")
 
 	for _, event := range events {
-		query = query.Values(event.ApartmentID, event.Type.String(), event.Status.String(), event.Entity, false, false, time.Now())
+		query = query.Values(event.ApartmentID, event.Type, event.Status, event.Entity, false, false, time.Now())
 	}
 
 	query = query.Suffix("RETURNING id").RunWith(e.db)

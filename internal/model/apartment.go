@@ -1,6 +1,12 @@
 package apartment
 
-import "fmt"
+import (
+	"database/sql/driver"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"time"
+)
 
 //Apartment comment for linter
 type Apartment struct {
@@ -51,7 +57,7 @@ type Event struct {
 	Entity      *Apartment  `db:"payload"`
 	IsDeleted   bool        `db:"is_deleted"`
 	IsLocked    bool        `db:"is_locked"`
-	Updated     int64       `db:"updated"`
+	Updated     time.Time   `db:"updated"`
 }
 
 func (e *Event) String() string {
@@ -64,4 +70,21 @@ func (d EventType) String() string {
 
 func (d EventStatus) String() string {
 	return [...]string{"Deferred", "Processed"}[d]
+}
+
+// Scan - make the Apartment struct implement the sql.Scanner interface. This method
+// simply decodes a JSON-encoded value into the struct fields.
+func (a *Apartment) Scan(value interface{}) error {
+	b, ok := value.([]byte)
+	if !ok {
+		return errors.New("type assertion to []byte failed")
+	}
+
+	return json.Unmarshal(b, &a)
+}
+
+// Value - make the Apartment struct implement the driver.Valuer interface. This method
+// simply returns the JSON-encoded representation of the struct.
+func (a Apartment) Value() (driver.Value, error) {
+	return json.Marshal(a)
 }

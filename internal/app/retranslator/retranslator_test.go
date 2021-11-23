@@ -55,7 +55,7 @@ func TestSendAndRemove(t *testing.T) {
 		return nil
 	}).AnyTimes()
 
-	sender.EXPECT().Send(gomock.Any()).DoAndReturn(func(e *apartment.Event) (err error) {
+	sender.EXPECT().Send(gomock.Any(), gomock.Any()).DoAndReturn(func(e *apartment.Event, _ string) (err error) {
 		sendedEventsLock.Lock()
 		defer sendedEventsLock.Unlock()
 
@@ -101,7 +101,7 @@ func TestSendingFail_AllEventMustBeUnlocked(t *testing.T) {
 
 	mockMethodRepoLock(repo, &eventsLock, events, lockedEvents) //nolint:govet
 
-	sender.EXPECT().Send(gomock.Any()).DoAndReturn(func(e *apartment.Event) (err error) {
+	sender.EXPECT().Send(gomock.Any(), gomock.Any()).DoAndReturn(func(e *apartment.Event, _ string) (err error) {
 		return fmt.Errorf("Fail to send event #%d", e.ID)
 	}).AnyTimes()
 	repo.EXPECT().Unlock(gomock.Any(), gomock.Any()).DoAndReturn(func(_ context.Context, ids []uint64) (err error) {

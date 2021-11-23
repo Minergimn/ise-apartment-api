@@ -27,20 +27,22 @@ type producer struct {
 	n       uint64
 	timeout time.Duration //nolint
 
-	sender sender.EventSender
-	events <-chan apartment.Event
+	sender      sender.EventSender
+	senderTopic string
+	events      <-chan apartment.Event
 
 	repo repo.EventRepo
 
 	workerPool *workerpool.WorkerPool
 
-	wg   *sync.WaitGroup
+	wg *sync.WaitGroup
 }
 
 //NewKafkaProducer comment for linter
 func NewKafkaProducer(
 	n uint64,
 	sender sender.EventSender,
+	senderTopic string,
 	events <-chan apartment.Event,
 	repo repo.EventRepo,
 	workerPool *workerpool.WorkerPool,
@@ -49,12 +51,13 @@ func NewKafkaProducer(
 	wg := &sync.WaitGroup{}
 
 	return &producer{
-		n:          n,
-		sender:     sender,
-		events:     events,
-		repo:       repo,
-		workerPool: workerPool,
-		wg:         wg,
+		n:           n,
+		sender:      sender,
+		senderTopic: senderTopic,
+		events:      events,
+		repo:        repo,
+		workerPool:  workerPool,
+		wg:          wg,
 	}
 }
 
@@ -66,7 +69,7 @@ func (p *producer) Start(ctx context.Context) {
 			for {
 				select {
 				case event := <-p.events:
-					if err := p.sender.Send(&event); err != nil {
+					if err := p.sender.Send(&event, p.senderTopic); err != nil {
 						p.workerPool.Submit(func() {
 							logger.DebugKV(ctx, fmt.Sprintf("Sending of event %s failed with error: %t", event.String(), err))
 

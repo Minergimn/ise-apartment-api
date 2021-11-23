@@ -32,8 +32,9 @@ type Config struct {
 
 	Ctx context.Context
 
-	Repo   repo.EventRepo
-	Sender sender.EventSender
+	Repo        repo.EventRepo
+	Sender      sender.EventSender
+	SenderTopic string
 }
 
 type retranslator struct {
@@ -61,6 +62,7 @@ func NewRetranslator(cfg Config) Retranslator {
 	producer := producer.NewKafkaProducer(
 		cfg.ProducerCount,
 		cfg.Sender,
+		cfg.SenderTopic,
 		events,
 		cfg.Repo,
 		workerPool)
@@ -70,7 +72,7 @@ func NewRetranslator(cfg Config) Retranslator {
 		consumer:   consumer,
 		producer:   producer,
 		workerPool: workerPool,
-		ctx: 		ctx,
+		ctx:        ctx,
 		cancelFunc: cancel,
 	}
 }
