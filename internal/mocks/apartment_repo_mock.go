@@ -94,3 +94,18 @@ func (mr *MockRepoMockRecorder) ListApartments(arg0, arg1, arg2, arg3, arg4, arg
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListApartments", reflect.TypeOf((*MockRepo)(nil).ListApartments), arg0, arg1, arg2, arg3, arg4, arg5)
 }
+
+// UpdateApartment mocks base method.
+func (m *MockRepo) UpdateApartment(arg0 context.Context, arg1 *apartment.Apartment) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateApartment", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateApartment indicates an expected call of UpdateApartment.
+func (mr *MockRepoMockRecorder) UpdateApartment(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateApartment", reflect.TypeOf((*MockRepo)(nil).UpdateApartment), arg0, arg1)
+}

@@ -35,6 +35,13 @@ service IseApartmentApiService {
       delete: "/api/v1/apartments/{apartment_id}"
     };
   }
+  // UpdateApartmentV1 - Update an apartment
+  rpc UpdateApartmentV1(UpdateApartmentV1Request) returns (UpdateApartmentV1Response) {
+    option (google.api.http) = {
+      patch: "/api/v1/apartments/{apartment_id}"
+      body: "value"
+    };
+  }
 }
 
 message Apartment {
@@ -80,5 +87,14 @@ message RemoveApartmentV1Request {
 
 message RemoveApartmentV1Response {
   bool found = 1;
+}
+
+message UpdateApartmentV1Request {
+  uint64 apartment_id = 1 [(validate.rules).uint64.gt = 0];
+  Apartment value = 2 [(validate.rules).message.required = true];
+}
+
+message UpdateApartmentV1Response {
+  bool updated = 1;
 }
 
