@@ -135,7 +135,7 @@ func getConfig(repo *mocks.MockEventRepo, sender *mocks.MockEventSender) Config 
 		ChannelSize:    512,
 		ConsumerCount:  5,
 		ConsumeSize:    2,
-		ConsumeTimeout: 10 * time.Second,
+		ConsumeTimeout: 10,
 		ProducerCount:  10,
 		WorkerCount:    10,
 		Repo:           repo,
