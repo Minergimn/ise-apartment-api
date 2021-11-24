@@ -152,7 +152,7 @@ func generateEvents(eventCount int) []apartment.Event {
 			ID:     i,
 			Type:   apartment.Created,
 			Status: apartment.Deferred,
-			Entity: &apartment.Apartment{
+			Entity: &apartment.ApartmentPaypoad{
 				ID:     i,
 				Object: fmt.Sprintf("Object %d", i),
 				Owner:  fmt.Sprintf("Owner of object %d", i),

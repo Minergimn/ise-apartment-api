@@ -50,14 +50,14 @@ const (
 
 //Event comment for linter
 type Event struct {
-	ID          uint64      `db:"id"`
-	ApartmentID uint64      `db:"apartment_id"`
-	Type        EventType   `db:"type"`
-	Status      EventStatus `db:"status"`
-	Entity      *Apartment  `db:"payload"`
-	IsDeleted   bool        `db:"is_deleted"`
-	IsLocked    bool        `db:"is_locked"`
-	Updated     time.Time   `db:"updated"`
+	ID          uint64            `db:"id"`
+	ApartmentID uint64            `db:"apartment_id"`
+	Type        EventType         `db:"type"`
+	Status      EventStatus       `db:"status"`
+	Entity      *ApartmentPaypoad `db:"payload"`
+	IsDeleted   bool              `db:"is_deleted"`
+	IsLocked    bool              `db:"is_locked"`
+	Updated     time.Time         `db:"updated"`
 }
 
 func (e *Event) String() string {
@@ -72,9 +72,17 @@ func (d EventStatus) String() string {
 	return [...]string{"Deferred", "Processed"}[d]
 }
 
+// ApartmentPaypoad - type for event payload
+type ApartmentPaypoad struct{
+	ID     uint64 `db:"id"`
+	Object string `db:"object"`
+	Owner  string `db:"owner"`
+	Status Status `db:"status"`
+}
+
 // Scan - make the Apartment struct implement the sql.Scanner interface. This method
 // simply decodes a JSON-encoded value into the struct fields.
-func (a *Apartment) Scan(value interface{}) error {
+func (a *ApartmentPaypoad) Scan(value interface{}) error {
 	b, ok := value.([]byte)
 	if !ok {
 		return errors.New("type assertion to []byte failed")
@@ -85,6 +93,16 @@ func (a *Apartment) Scan(value interface{}) error {
 
 // Value - make the Apartment struct implement the driver.Valuer interface. This method
 // simply returns the JSON-encoded representation of the struct.
-func (a Apartment) Value() (driver.Value, error) {
+func (a ApartmentPaypoad) Value() (driver.Value, error) {
 	return json.Marshal(a)
+}
+
+//MapToApartment - for mapping from Apartment to ApartmentPaypoad
+func (a Apartment) MapToApartmentPaypoad() *ApartmentPaypoad {
+	return &ApartmentPaypoad{
+		ID: a.ID,
+		Owner: a.Owner,
+		Object: a.Object,
+		Status: a.Status,
+	}
 }
