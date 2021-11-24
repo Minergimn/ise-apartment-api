@@ -52,7 +52,7 @@ func (a *apartmentAPI) CreateApartmentV1(
 		ApartmentID: id,
 		Type:        apartment.Created,
 		Status:      apartment.Deferred,
-		Entity:      apt.MapToApartmentPaypoad(),
+		Entity:      apt.MapToPayload(),
 	}
 
 	var events []apartment.Event

@@ -53,9 +53,9 @@ type Event struct {
 	ID          uint64            `db:"id"`
 	ApartmentID uint64            `db:"apartment_id"`
 	Type        EventType         `db:"type"`
-	Status      EventStatus       `db:"status"`
-	Entity      *ApartmentPaypoad `db:"payload"`
-	IsDeleted   bool              `db:"is_deleted"`
+	Status      EventStatus `db:"status"`
+	Entity      *Payload    `db:"payload"`
+	IsDeleted   bool        `db:"is_deleted"`
 	IsLocked    bool              `db:"is_locked"`
 	Updated     time.Time         `db:"updated"`
 }
@@ -72,8 +72,8 @@ func (d EventStatus) String() string {
 	return [...]string{"Deferred", "Processed"}[d]
 }
 
-// ApartmentPaypoad - type for event payload
-type ApartmentPaypoad struct{
+// Payload - type for event payload
+type Payload struct{
 	ID     uint64 `db:"id"`
 	Object string `db:"object"`
 	Owner  string `db:"owner"`
@@ -82,7 +82,7 @@ type ApartmentPaypoad struct{
 
 // Scan - make the Apartment struct implement the sql.Scanner interface. This method
 // simply decodes a JSON-encoded value into the struct fields.
-func (a *ApartmentPaypoad) Scan(value interface{}) error {
+func (a *Payload) Scan(value interface{}) error {
 	b, ok := value.([]byte)
 	if !ok {
 		return errors.New("type assertion to []byte failed")
@@ -93,13 +93,13 @@ func (a *ApartmentPaypoad) Scan(value interface{}) error {
 
 // Value - make the Apartment struct implement the driver.Valuer interface. This method
 // simply returns the JSON-encoded representation of the struct.
-func (a ApartmentPaypoad) Value() (driver.Value, error) {
+func (a Payload) Value() (driver.Value, error) {
 	return json.Marshal(a)
 }
 
-//MapToApartment - for mapping from Apartment to ApartmentPaypoad
-func (a Apartment) MapToApartmentPaypoad() *ApartmentPaypoad {
-	return &ApartmentPaypoad{
+//MapToPayload - for mapping from Apartment to Payload
+func (a Apartment) MapToPayload() *Payload {
+	return &Payload{
 		ID: a.ID,
 		Owner: a.Owner,
 		Object: a.Object,

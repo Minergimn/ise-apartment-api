@@ -62,7 +62,7 @@ func (a *apartmentAPI) UpdateApartmentV1(
 		ApartmentID: req.ApartmentId,
 		Type:        apartment.Updated,
 		Status:      apartment.Deferred,
-		Entity:      apt.MapToApartmentPaypoad(),
+		Entity:      apt.MapToPayload(),
 	}
 
 	var events []apartment.Event
