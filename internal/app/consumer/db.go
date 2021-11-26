@@ -27,7 +27,7 @@ type consumer struct {
 	batchSize uint64
 	timeout   time.Duration
 
-	wg   *sync.WaitGroup
+	wg *sync.WaitGroup
 }
 
 //Config comment for linter
@@ -50,12 +50,12 @@ func NewDbConsumer(
 	wg := &sync.WaitGroup{}
 
 	return &consumer{
-		n:          n,
-		batchSize:  batchSize,
-		timeout:    consumeTimeout,
-		repo:       repo,
-		events:     events,
-		wg:         wg,
+		n:         n,
+		batchSize: batchSize,
+		timeout:   consumeTimeout,
+		repo:      repo,
+		events:    events,
+		wg:        wg,
 	}
 }
 
@@ -66,7 +66,7 @@ func (c *consumer) Start(ctx context.Context) {
 
 		go func() {
 			defer c.wg.Done()
-			ticker := time.NewTicker(c.timeout)
+			ticker := time.NewTicker(c.timeout * time.Second)
 			for {
 				select {
 				case <-ticker.C:

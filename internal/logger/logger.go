@@ -37,6 +37,7 @@ func fromContext(ctx context.Context) *zap.SugaredLogger {
 func ErrorKV(ctx context.Context, message string, kvs ...interface{}) {
 	fromContext(ctx).Error(append([]interface{}{message}, kvs...)...)
 }
+
 //WarnKV comment for linter
 func WarnKV(ctx context.Context, message string, kvs ...interface{}) {
 	fromContext(ctx).Warn(append([]interface{}{message}, kvs...)...)

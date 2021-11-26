@@ -17,6 +17,7 @@ type Repo interface {
 	ListApartments(ctx context.Context, cursor uint64, limit uint64, owner string, object string, ids []uint64) ([]model.Apartment, error)
 	CreateApartment(ctx context.Context, apartment *model.Apartment) (uint64, error)
 	DeleteApartment(ctx context.Context, apartmentID uint64) (bool, error)
+	UpdateApartment(ctx context.Context, apt *model.Apartment) (bool, error)
 }
 
 type repo struct {
@@ -118,22 +119,37 @@ func (r *repo) DeleteApartment(ctx context.Context, apartmentID uint64) (bool, e
 	span, ctx := opentracing.StartSpanFromContext(ctx, "repo.DeleteApartment")
 	defer span.Finish()
 
-	apartment, err := r.GetApartment(ctx, apartmentID)
+	_, err := r.GetApartment(ctx, apartmentID)
 	if err != nil {
 		return false, err
-	}
-
-	if apartment == nil {
-		return false, nil
-	}
-
-	if apartment.Status == model.Deleted {
-		return true, nil
 	}
 
 	query := pgQb().Update("apartments").
 		Set("status", 1).
 		Where(sq.Eq{"id": apartmentID})
+
+	s, args, err := query.ToSql()
+	if err != nil {
+		return false, err
+	}
+	_, err = r.db.ExecContext(ctx, s, args...)
+	return true, err
+}
+
+func (r *repo) UpdateApartment(ctx context.Context, apt *model.Apartment) (bool, error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "repo.UpdateApartment")
+	defer span.Finish()
+
+	apartment, err := r.GetApartment(ctx, apt.ID)
+	if err != nil {
+		return false, err
+	}
+
+	query := pgQb().Update("apartments").
+		Set("object", apt.Object).
+		Set("owner", apt.Owner).
+		Set("status", apartment.Status).
+		Where(sq.Eq{"id": apt.ID})
 
 	s, args, err := query.ToSql()
 	if err != nil {

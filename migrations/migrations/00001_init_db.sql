@@ -12,8 +12,8 @@ CREATE INDEX IF NOT EXISTS apartments_owner ON apartments (owner);
 CREATE TABLE IF NOT EXISTS apartments_events (
    id BIGSERIAL PRIMARY KEY,
    apartment_id bigint NOT NULL,
-   type text NOT NULL,
-   status text NOT NULL,
+   type int NOT NULL,
+   status int NOT NULL,
    payload jsonb NULL,
    is_deleted boolean NOT NULL,
    is_locked boolean NOT NULL,

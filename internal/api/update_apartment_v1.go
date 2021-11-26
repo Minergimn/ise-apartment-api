@@ -2,6 +2,8 @@ package api
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"github.com/ozonmp/ise-apartment-api/internal/metrics"
 	ise_apartment_api "github.com/ozonmp/ise-apartment-api/pkg/ise-apartment-api"
 	"google.golang.org/grpc/metadata"
@@ -13,10 +15,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (a *apartmentAPI) CreateApartmentV1(
+func (a *apartmentAPI) UpdateApartmentV1(
 	ctx context.Context,
-	req *ise_apartment_api.CreateApartmentV1Request,
-) (*ise_apartment_api.CreateApartmentV1Response, error) {
+	req *ise_apartment_api.UpdateApartmentV1Request,
+) (*ise_apartment_api.UpdateApartmentV1Response, error) {
 
 	md, ok := metadata.FromIncomingContext(ctx)
 	if ok {
@@ -30,27 +32,35 @@ func (a *apartmentAPI) CreateApartmentV1(
 		}
 	}
 
-	logger.DebugKV(ctx, "CreateApartmentV1 - started")
+	logger.DebugKV(ctx, "UpdateApartmentV1 - started")
 
 	if err := req.Validate(); err != nil {
-		logger.ErrorKV(ctx, "CreateApartmentV1 - invalid argument")
+		logger.ErrorKV(ctx, "UpdateApartmentV1 - invalid argument")
 
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
 	apt := a.mapApartmentFromAPIToDb(req.Value)
 
-	id, err := a.repo.CreateApartment(ctx, apt)
+	apt.ID = req.ApartmentId
+
+	updated, err := a.repo.UpdateApartment(ctx, apt)
 	if err != nil {
-		logger.ErrorKV(ctx, "CreateApartmentV1 - adding to apartment db failed")
+		if errors.Is(err, sql.ErrNoRows) {
+			logger.DebugKV(ctx, "apartment not found", "apartmentId", req.ApartmentId)
+			metrics.IncTotalApartmentNotFound()
+
+			return nil, status.Error(codes.NotFound, "apartment not found")
+		}
+
+		logger.ErrorKV(ctx, "UpdateApartmentV1 - apartment update in db failed")
 
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	apt.ID = id
 	createEvent := &apartment.Event{
-		ApartmentID: id,
-		Type:        apartment.Created,
+		ApartmentID: req.ApartmentId,
+		Type:        apartment.Updated,
 		Status:      apartment.Deferred,
 		Entity:      apt.MapToPayload(),
 	}
@@ -59,16 +69,16 @@ func (a *apartmentAPI) CreateApartmentV1(
 	events = append(events, *createEvent)
 	err = a.repoEvent.Add(ctx, events)
 	if err != nil {
-		logger.ErrorKV(ctx, "CreateApartmentV1 - adding to apartment_events db failed")
+		logger.ErrorKV(ctx, "UpdateApartmentV1 - adding to apartment_events db failed")
 
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	logger.DebugKV(ctx, "CreateApartmentV1 - success")
+	logger.DebugKV(ctx, "UpdateApartmentV1 - success")
 
 	metrics.IncTotalApartmentCUDEvents(metrics.Created)
 
-	return &ise_apartment_api.CreateApartmentV1Response{
-		ApartmentId: id,
+	return &ise_apartment_api.UpdateApartmentV1Response{
+		Updated: updated,
 	}, nil
 }

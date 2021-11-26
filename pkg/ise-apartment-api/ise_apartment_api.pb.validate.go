@@ -720,6 +720,166 @@ var _ interface {
 	ErrorName() string
 } = RemoveApartmentV1ResponseValidationError{}
 
+// Validate checks the field values on UpdateApartmentV1Request with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *UpdateApartmentV1Request) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	if m.GetApartmentId() <= 0 {
+		return UpdateApartmentV1RequestValidationError{
+			field:  "ApartmentId",
+			reason: "value must be greater than 0",
+		}
+	}
+
+	if m.GetValue() == nil {
+		return UpdateApartmentV1RequestValidationError{
+			field:  "Value",
+			reason: "value is required",
+		}
+	}
+
+	if v, ok := interface{}(m.GetValue()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateApartmentV1RequestValidationError{
+				field:  "Value",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	return nil
+}
+
+// UpdateApartmentV1RequestValidationError is the validation error returned by
+// UpdateApartmentV1Request.Validate if the designated constraints aren't met.
+type UpdateApartmentV1RequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateApartmentV1RequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateApartmentV1RequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateApartmentV1RequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateApartmentV1RequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateApartmentV1RequestValidationError) ErrorName() string {
+	return "UpdateApartmentV1RequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateApartmentV1RequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateApartmentV1Request.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateApartmentV1RequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateApartmentV1RequestValidationError{}
+
+// Validate checks the field values on UpdateApartmentV1Response with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *UpdateApartmentV1Response) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	// no validation rules for Updated
+
+	return nil
+}
+
+// UpdateApartmentV1ResponseValidationError is the validation error returned by
+// UpdateApartmentV1Response.Validate if the designated constraints aren't met.
+type UpdateApartmentV1ResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateApartmentV1ResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateApartmentV1ResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateApartmentV1ResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateApartmentV1ResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateApartmentV1ResponseValidationError) ErrorName() string {
+	return "UpdateApartmentV1ResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateApartmentV1ResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateApartmentV1Response.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateApartmentV1ResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateApartmentV1ResponseValidationError{}
+
 // Validate checks the field values on
 // ListApartmentsV1Request_ListApartmentsParams with the rules defined in the
 // proto definition for this message. If any rules are violated, an error is returned.
